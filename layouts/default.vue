@@ -9,11 +9,11 @@
       <v-toolbar flat class="transparent">
         <v-list dark class="primary">
           <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <img src="https://randomuser.me/api/portraits/men/85.jpg" >
+            <v-list-tile-avatar tile>
+              <img src="~/static/images/fls-logo-mini.png" >
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>John Leider</v-list-tile-title>
+              <v-list-tile-title>FLS 2018</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -35,7 +35,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="white" class="elevation-1" dense fixed app :clipped-left="clipped">
+    <v-toolbar color="white" class="elevation-1" dense fixed app >
       <v-toolbar-side-icon class="hidden-md-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
       <v-btn
         class="hidden-md-and-down"
@@ -43,16 +43,24 @@
         @click.stop="miniVariant = !miniVariant">
         <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-text-field
+        @focus="inputSearchClass = 'elevation-3'"
+        @blur="inputSearchClass = ''"
+        class="elevation-0"
+        :class="inputSearchClass"
+        placeholder="Pencarian"
+        solo
+        prepend-icon="search"
+        ></v-text-field>
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-content>
-      <v-container>
+      <v-container fluid>
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; 2017</span>
+    <v-footer app class="justify-center">
+      &copy; {{ new Date().getUTCFullYear() }} — <a href="https://github.com/creativefls/"><strong>CreativeFLS</strong></a>
     </v-footer>
   </v-app>
 </template>
@@ -68,7 +76,8 @@
           { icon: 'apps', title: 'Dashboard', to: '/' },
           // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
         ],
-        miniVariant: false
+        miniVariant: false,
+        inputSearchClass: ''
       }
     }
   }
