@@ -53,6 +53,7 @@
         prepend-icon="search"
         ></v-text-field>
       <v-spacer></v-spacer>
+      <popover-menu-user></popover-menu-user>
     </v-toolbar>
     <v-content>
       <v-container fluid>
@@ -66,6 +67,7 @@
 </template>
 
 <script>
+  import PopoverMenuUser from '@/components/PopoverMenuUser'
   export default {
     data() {
       return {
@@ -79,6 +81,7 @@
         miniVariant: false,
         inputSearchClass: ''
       }
-    }
+    },
+    components: { PopoverMenuUser }
   }
 </script>
