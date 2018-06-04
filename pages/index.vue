@@ -1,40 +1,67 @@
 <template>
-  <v-card>
-    <v-card-title class="headline">Pendaftar</v-card-title>
-    <v-card-text>
-      <v-data-table
-        :items="registrarItems"
-        class="elevation-1"
-        :loading="loadingRegistrar"
-        hide-actions
-        hide-headers
-      >
-        <template slot="items" slot-scope="props">
-          <td>{{ props.item.fullname }}</td>
-          <td class="text-xs-left">{{ props.item.institution }}</td>
-          <td class="text-xs-left">{{ props.item.fat }}</td>
-          <td class="text-xs-left">{{ props.item.carbs }}</td>
-          <td class="text-xs-left">{{ props.item.protein }}</td>
-          <td class="text-xs-left">{{ props.item.iron }}</td>
-        </template>
-      </v-data-table>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" flat nuxt to="/inspire">Continue</v-btn>
-    </v-card-actions>
-  </v-card>
+  <div>
+    <v-layout>
+      <v-flex md8>
+        <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
+          <v-card-title>
+            <v-avatar
+              tile
+              size="48px"
+              color="grey"
+              class="mr-3">
+              <img src="~/static/images/fls-logo-mini.png" alt="">
+            </v-avatar>
+            <div>
+              <h3 class="title mb-0">
+                {{ registrar.fullname }}
+                <v-icon color="info">fas fa-mars</v-icon>
+              </h3>
+              <div style="text-transform: capitalize;">{{ registrar.city.toLowerCase() }}</div>
+              <v-btn v-if="registrar.socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.socmed.instagram" target="_blank">
+                <v-icon>fab fa-instagram</v-icon>
+              </v-btn>
+              <v-btn v-if="registrar.socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.socmed.line" target="_blank">
+                <v-icon>fab fa-line</v-icon>
+              </v-btn>
+            </div>
+          </v-card-title>
+          <v-card-text>
+            <strong>Motivasi Ikut FLS</strong>
+            <p>{{ registrar.essayMotivationJoin }}</p>
+            <strong>Alasan memilih room {{ registrar.roomFirst }}</strong>
+            <p>{{ registrar.essayRoomSelected }}</p>
+            <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
+            <p>{{ registrar.essayCaseStudy }}</p>
+          </v-card-text>
+          <v-card-actions class="cloud">
+            <v-layout>
+              <v-flex xs2>
+                <v-text-field
+                  v-model="nilai"
+                  label="Nilai"
+                  data-vv-as="Nilai"
+                  :error-messages="errors.collect('nilai')"
+                  v-validate="'required|min:0|max:11'"
+                  data-vv-name="nilai"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat nuxt to="/inspire">Continue</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
   data () {
     return {
       registrarItems: [],
-      loadingRegistrar: false
+      loadingRegistrar: false,
+      nilai: 0
     }
   },
   methods: {
@@ -71,10 +98,6 @@ export default {
   },
   created () {
     this.fetchDataRegistrars()
-  },
-  components: {
-    Logo,
-    VuetifyLogo
   }
 }
 </script>
