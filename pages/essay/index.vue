@@ -14,7 +14,7 @@
             <div>
               <h3 class="title mb-0">
                 {{ registrar.fullname }}
-                <v-icon color="info">fas fa-mars</v-icon>
+                <v-icon :color="registrar.gender == 'male' ? 'info' : 'pink'">{{ iconGender(registrar.gender) }}</v-icon>
               </h3>
               <div style="text-transform: capitalize;">{{ registrar.city.toLowerCase() }}</div>
               <v-btn v-if="registrar.socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.socmed.instagram" target="_blank">
@@ -72,6 +72,16 @@ export default {
     }
   },
   methods: {
+    iconGender (gender) {
+      switch (gender) {
+        case 'male':
+          return 'fas fa-mars'
+        case 'female':
+          return 'fas fa-venus'
+        default:
+          return 'fas fa-genderless'
+      }
+    },
     wordCount (str) {
       return str.split(' ')
                 .filter(function(n) { return n != '' })

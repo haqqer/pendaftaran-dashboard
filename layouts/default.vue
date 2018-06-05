@@ -75,9 +75,9 @@
         darkTheme: false,
         drawer: true,
         items: [
-          { icon: 'apps', title: 'Dashboard', to: '/' },
-          { icon: 'apps', title: 'Essay', to: '/essay' },
-          { icon: 'apps', title: 'Tabel', to: '/tabel' },
+          { icon: 'show_chart', title: 'Dashboard', to: '/' },
+          { icon: 'assignment', title: 'Essay', to: '/essay' },
+          { icon: 'table_chart', title: 'Tabel', to: '/tabel' },
           { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
         ],
         miniVariant: false,
