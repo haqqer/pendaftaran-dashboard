@@ -41,7 +41,7 @@
         class="hidden-md-and-down"
         icon
         @click.stop="miniVariant = !miniVariant">
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
+        <v-icon>menu</v-icon>
       </v-btn>
       <v-text-field
         @focus="inputSearchClass = 'elevation-3'"
