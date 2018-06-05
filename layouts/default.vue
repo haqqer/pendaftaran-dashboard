@@ -76,6 +76,7 @@
         drawer: true,
         items: [
           { icon: 'apps', title: 'Dashboard', to: '/' },
+          { icon: 'apps', title: 'Essay', to: '/essay' },
           { icon: 'apps', title: 'Tabel', to: '/tabel' },
           { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
         ],
