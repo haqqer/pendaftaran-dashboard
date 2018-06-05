@@ -27,15 +27,15 @@
         <v-card-text>
           <strong>Motivasi Ikut FLS</strong>
           <small class="ml-2">( {{ wordCount(registrar.essayMotivationJoin) }} kata )</small>
-          <p>{{ registrar.essayMotivationJoin }}</p>
+          <p>{{ shortText(registrar.essayMotivationJoin) }}</p>
 
           <strong>Alasan memilih room {{ registrar.roomFirst }}</strong>
           <small class="ml-2">( {{ wordCount(registrar.essayRoomSelected) }} kata )</small>
-          <p>{{ registrar.essayRoomSelected }}</p>
+          <p>{{ shortText(registrar.essayRoomSelected) }}</p>
 
           <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
           <small class="ml-2">( {{ wordCount(registrar.essayCaseStudy) }} kata )</small>
-          <p>{{ registrar.essayCaseStudy }}</p>
+          <p>{{ shortText(registrar.essayCaseStudy) }}</p>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="">
@@ -81,6 +81,13 @@ export default {
       return str.split(' ')
                 .filter(function(n) { return n != '' })
                 .length;
+    },
+    shortText (str) {
+      return str.trim()    // remove leading and trailing spaces
+                .substring(0, 200)    // get first 600 characters
+                .split(" ") // separate characters into an array of words
+                .slice(0, -1)    // remove the last full or partial word
+                .join(" ") + " ..."
     },
     fetchDataRegistrars () {
       this.loadingRegistrar = true
