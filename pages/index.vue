@@ -33,7 +33,8 @@
             <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
             <p>{{ registrar.essayCaseStudy }}</p>
           </v-card-text>
-          <v-card-actions class="cloud">
+          <v-divider></v-divider>
+          <v-card-actions class="">
             <v-layout>
               <v-flex xs2>
                 <v-text-field
@@ -41,13 +42,12 @@
                   label="Nilai"
                   data-vv-as="Nilai"
                   :error-messages="errors.collect('nilai')"
-                  v-validate="'required|min:0|max:11'"
+                  v-validate="'required|min_value:1|max_value:100'"
                   data-vv-name="nilai"
                 ></v-text-field>
               </v-flex>
+                <v-btn color="primary">beri nilai</v-btn>
             </v-layout>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" flat nuxt to="/inspire">Continue</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -61,7 +61,7 @@ export default {
     return {
       registrarItems: [],
       loadingRegistrar: false,
-      nilai: 0
+      nilai: 1
     }
   },
   methods: {
