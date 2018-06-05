@@ -8,7 +8,7 @@
             size="48px"
             color="grey"
             class="mr-3">
-            <img src="~/static/images/fls-logo-mini.png" alt="">
+            <img :src="'https://randomuser.me/api/portraits/women/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
           </v-avatar>
           <div>
             <h3 class="title mb-0">
@@ -83,6 +83,7 @@ export default {
                 .length;
     },
     shortText (str) {
+      if (str.length < 200) return str
       return str.trim()    // remove leading and trailing spaces
                 .substring(0, 200)    // get first 600 characters
                 .split(" ") // separate characters into an array of words
