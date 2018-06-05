@@ -27,15 +27,20 @@
           </v-card-title>
           <v-card-text>
             <strong>Motivasi Ikut FLS</strong>
+            <small class="ml-2">( {{ wordCount(registrar.essayMotivationJoin) }} kata )</small>
             <p>{{ registrar.essayMotivationJoin }}</p>
+
             <strong>Alasan memilih room {{ registrar.roomFirst }}</strong>
+            <small class="ml-2">( {{ wordCount(registrar.essayRoomSelected) }} kata )</small>
             <p>{{ registrar.essayRoomSelected }}</p>
+
             <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
+            <small class="ml-2">( {{ wordCount(registrar.essayCaseStudy) }} kata )</small>
             <p>{{ registrar.essayCaseStudy }}</p>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions class="">
-            <v-layout>
+            <v-layout align-center>
               <v-flex xs2>
                 <v-text-field
                   v-model="nilai"
@@ -46,7 +51,9 @@
                   data-vv-name="nilai"
                 ></v-text-field>
               </v-flex>
+              <v-flex>
                 <v-btn color="primary">beri nilai</v-btn>
+              </v-flex>
             </v-layout>
           </v-card-actions>
         </v-card>
@@ -65,6 +72,11 @@ export default {
     }
   },
   methods: {
+    wordCount (str) {
+      return str.split(' ')
+                .filter(function(n) { return n != '' })
+                .length;
+    },
     fetchDataRegistrars () {
       this.loadingRegistrar = true
       this.$axios.get('http://128.199.72.101:3000/api/registrars').then(response => {
