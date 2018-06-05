@@ -1,7 +1,7 @@
 <template>
-  <v-layout>
+  <v-layout v-if="registrar">
     <v-flex md8>
-      <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
+      <v-card class="mb-4">
         <v-card-title>
           <v-avatar
             tile
@@ -49,12 +49,20 @@
               data-vv-name="nilai"
             ></v-text-field> -->
             <v-flex md6>
-              <v-btn block round color="primary" :to="registrar.id" append>Selengkapnya</v-btn>
+              <v-btn block round color="primary">Selengkapnya</v-btn>
             </v-flex>
           </v-layout>
         </v-card-actions>
       </v-card>
     </v-flex>
+  </v-layout>
+  <v-layout v-else  justify-center>
+    <v-progress-circular
+      :size="70"
+      :width="7"
+      indeterminate
+      style=""
+      color="primary"></v-progress-circular>
   </v-layout>
 </template>
 
@@ -62,8 +70,7 @@
 export default {
   data () {
     return {
-      registrarItems: [],
-      loadingRegistrar: false
+      registrar: null
     }
   },
   methods: {
@@ -82,12 +89,11 @@ export default {
                 .filter(function(n) { return n != '' })
                 .length;
     },
-    fetchDataRegistrars () {
-      this.loadingRegistrar = true
-      this.$axios.get('http://128.199.72.101:3000/api/registrars').then(response => {
-        this.registrarItems = response.data
+    getDataRegistrar () {
+      this.$axios.get('http://128.199.72.101:3000/api/registrars/' + this.$route.params.id).then(response => {
+        this.registrar = response.data
         console.log('registrar ', response.data)
-        this.loadingRegistrar = false
+        // this.loadingRegistrar = false
       }).catch(error => {
         console.log('--- awh error ----')
         if (error.response) {
@@ -114,7 +120,7 @@ export default {
     }
   },
   created () {
-    this.fetchDataRegistrars()
+    this.getDataRegistrar()
   }
 }
 </script>
