@@ -40,10 +40,20 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="">
-          <v-layout align-center justify-center>
-            <v-flex md6>
-            </v-flex>
-          </v-layout>
+          <template v-if="registrar.scores">
+            <h4 class="subheading">Nilai - </h4>
+            <strong>Prestasi</strong>
+            <p>{{ registrar.scores.achievement }}</p>
+
+            <strong>Organisasi</strong>
+            <p>{{ registrar.scores.organization }}</p>
+
+            <strong>Sosial</strong>
+            <p>{{ registrar.scores.socialActivity }}</p>
+
+            <strong>Essay</strong>
+            <p>{{ registrar.scores.essay }}</p>
+          </template>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -76,7 +86,7 @@
         <v-card-actions>
           <v-btn color="primary" outline round @click.native="dialog = false">Batal</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" round @click.native="dialog = false">OK</v-btn>
+          <v-btn color="primary" round :loading="loading" @click.native="submitScore">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -92,15 +102,22 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   data () {
     return {
       registrar: null,
       dialog: false,
+      loading: false,
       score: 0
     }
   },
+  computed: {
+    ...mapState(['userInfo'])
+  },
   methods: {
+    ...mapActions(['notify']),
     iconGender (gender) {
       switch (gender) {
         case 'male':
@@ -117,7 +134,11 @@ export default {
                 .length;
     },
     getDataRegistrar () {
-      this.$axios.$get('/registrars/' + this.$route.params.id).then(response => {
+      this.$axios.$get('/registrars/' + this.$route.params.id, {
+        params: {
+          filter: { include: 'scores' }
+        }
+      }).then(response => {
         this.registrar = response
         console.log('registrar ', response)
         // this.loadingRegistrar = false
@@ -143,6 +164,29 @@ export default {
         }
         console.log('--- error konfig ----')
         console.log(error.config);
+      })
+    },
+    submitScore () {
+      this.loading = true
+      let data = {
+        achievement: this.registrar.scores.achievement,
+        organization: this.registrar.scores.organization,
+        socialActivity: this.registrar.scores.socialActivity,
+        registrarId: this.registrar.id,
+        scoredById: this.userInfo.id,
+        essay: this.score
+      }
+      if (this.registrar.scores) {
+        data.id = this.registrar.scores.id
+      }
+      this.$axios.$post('/RegistrarScors/replaceOrCreate', data).then(response => {
+        this.notify({ type: 'success', message: 'Berhasil nilai  ' + this.registrar.fullname + ' ' + this.score })
+        this.$router.push('/essay')
+        this.loading = false
+        this.dialog = false
+      }).catch(error => {
+        this.notify({ type: 'error', message: error.message })
+        this.loading = false
       })
     }
   },

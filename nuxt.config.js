@@ -41,6 +41,7 @@ module.exports = {
     '@/plugins/vee-validate',
     '@/plugins/vue-moment',
     '@/plugins/vuetify',
+    '@/plugins/axios',
     '@/plugins/init-app'
   ],
 
