@@ -63,28 +63,54 @@
     <v-footer app class="justify-center">
       &copy; {{ new Date().getUTCFullYear() }} — <a href="https://github.com/creativefls/"><strong>CreativeFLS</strong></a>
     </v-footer>
+    <v-snackbar
+      :color="notification.color"
+      multi-line
+      top
+      v-model="snackbarMessage">{{ notification.message }}
+      <v-btn dark flat @click="notificationToggle">OK</v-btn>
+    </v-snackbar>
   </v-app>
 </template>
 
 <script>
-  import PopoverMenuUser from '@/components/PopoverMenuUser'
-  export default {
-    middleware: ['check-auth'],
-    data() {
-      return {
-        title: 'Vuetify.js',
-        darkTheme: false,
-        drawer: true,
-        items: [
-          { icon: 'show_chart', title: 'Dashboard', to: '/' },
-          { icon: 'assignment', title: 'Essay', to: '/essay' },
-          { icon: 'table_chart', title: 'Tabel', to: '/tabel' },
-          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
-        ],
-        miniVariant: false,
-        inputSearchClass: ''
+import { mapState, mapActions } from 'vuex';
+import PopoverMenuUser from '@/components/PopoverMenuUser'
+
+export default {
+  middleware: ['check-auth'],
+  data() {
+    return {
+      title: 'Vuetify.js',
+      darkTheme: false,
+      drawer: true,
+      items: [
+        { icon: 'show_chart', title: 'Dashboard', to: '/' },
+        { icon: 'assignment', title: 'Essay', to: '/essay' },
+        { icon: 'table_chart', title: 'Tabel', to: '/tabel' },
+        { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+      ],
+      miniVariant: false,
+      inputSearchClass: ''
+    }
+  },
+  computed: {
+    ...mapState(['notification']),
+    snackbarMessage: {
+      get() {
+        return this.notification.active;
+      },
+      set(val) {
+        this.notificationToggle();
       }
+    }
+  },
+  methods: {
+    ...mapActions(['notify']),
+    notificationToggle() {
+      this.notify({ type: 'error', message: '' });
     },
-    components: { PopoverMenuUser }
-  }
+  },
+  components: { PopoverMenuUser }
+}
 </script>
