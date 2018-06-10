@@ -87,7 +87,7 @@ export default {
       username: '',
       password: '',
       loading: false,
-      registerSuccess: true,
+      registerSuccess: false,
       alert: {
         show: false,
         message: ''

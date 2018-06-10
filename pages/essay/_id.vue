@@ -37,23 +37,18 @@
           <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
           <small class="ml-2">( {{ wordCount(registrar.essayCaseStudy) }} kata )</small>
           <p>{{ registrar.essayCaseStudy }}</p>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions class="">
+
+          <v-divider></v-divider>
           <template v-if="registrar.scores">
             <h4 class="subheading">Nilai - </h4>
-            <strong>Prestasi</strong>
-            <p>{{ registrar.scores.achievement }}</p>
-
-            <strong>Organisasi</strong>
-            <p>{{ registrar.scores.organization }}</p>
-
-            <strong>Sosial</strong>
-            <p>{{ registrar.scores.socialActivity }}</p>
-
-            <strong>Essay</strong>
-            <p>{{ registrar.scores.essay }}</p>
+            <div><strong>Prestasi</strong> {{ registrar.scores.achievement }}</div>
+            <div><strong>Organisasi</strong> {{ registrar.scores.organization }}</div>
+            <div><strong>Sosial</strong> {{ registrar.scores.socialActivity }}</div>
+            <div><strong>Essay</strong> {{ registrar.scores.essay }}</div>
           </template>
+        </v-card-text>
+        <v-card-actions class="">
+
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -169,14 +164,14 @@ export default {
     submitScore () {
       this.loading = true
       let data = {
-        achievement: this.registrar.scores.achievement,
-        organization: this.registrar.scores.organization,
-        socialActivity: this.registrar.scores.socialActivity,
         registrarId: this.registrar.id,
         scoredById: this.userInfo.id,
         essay: this.score
       }
       if (this.registrar.scores) {
+        data.achievement = this.registrar.scores.achievement,
+        data.organization = this.registrar.scores.organization,
+        data.socialActivity = this.registrar.scores.socialActivity,
         data.id = this.registrar.scores.id
       }
       this.$axios.$post('/RegistrarScors/replaceOrCreate', data).then(response => {

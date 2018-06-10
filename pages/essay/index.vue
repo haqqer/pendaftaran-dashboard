@@ -37,18 +37,19 @@
           <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
           <small class="ml-2">( {{ wordCount(registrar.essayCaseStudy) }} kata )</small>
           <p>{{ shortText(registrar.essayCaseStudy) }}</p>
+
+          <v-divider></v-divider>
+          <template v-if="registrar.scores">
+            <h4 class="subheading">Nilai - </h4>
+            <div><strong>Prestasi</strong> {{ registrar.scores.achievement }}</div>
+            <div><strong>Organisasi</strong> {{ registrar.scores.organization }}</div>
+            <div><strong>Sosial</strong> {{ registrar.scores.socialActivity }}</div>
+            <div><strong>Essay</strong> {{ registrar.scores.essay }}</div>
+          </template>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="">
           <v-layout align-center justify-center>
-            <!-- <v-text-field
-              v-model="nilai"
-              label="Nilai"
-              data-vv-as="Nilai"
-              :error-messages="errors.collect('nilai')"
-              v-validate="'required|min_value:1|max_value:100'"
-              data-vv-name="nilai"
-            ></v-text-field> -->
             <v-flex md6>
               <v-btn block round color="primary" :to="registrar.id" append>Selengkapnya</v-btn>
             </v-flex>
@@ -101,7 +102,11 @@ export default {
     },
     fetchDataRegistrars () {
       this.loadingRegistrar = true
-      this.$axios.$get('/registrars').then(response => {
+      this.$axios.$get('/registrars', {
+        params: {
+          filter: { include: 'scores' }
+        }
+      }).then(response => {
         this.registrarItems = response
         console.log('registrar ', response)
         this.loadingRegistrar = false
