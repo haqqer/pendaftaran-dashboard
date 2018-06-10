@@ -59,7 +59,7 @@
                   <v-layout row>
                     <v-flex xs12>
                       <v-btn type="submit" :disabled="loading" :loading="loading" color="primary">
-                        Login
+                        daftar
                           <span slot="loader" class="custom-loader">
                           <v-icon light>cached</v-icon>
                           </span>
@@ -70,6 +70,10 @@
               </v-container>
             </v-card-text>
           </v-card>
+          <div class="text-xs-center title py-4">
+            Kalau sudah punya akun bisa
+            <nuxt-link to="/auth/login">Login</nuxt-link>
+          </div>
         </v-flex>
       </v-layout>
     </v-container>
