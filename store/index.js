@@ -9,6 +9,7 @@ const createStore = () => {
       },
       userInfo: null,
       token: null,
+      tokenExpire: null,
       notification: {
         color: 'error',
         active: false,
@@ -22,6 +23,7 @@ const createStore = () => {
         state.notification.color = payload.type
       },
       SET_TOKEN (state, token) { state.token = token },
+      SET_TOKEN_EXP (state, data) { state.tokenExpire = data },
       CLEAR_TOKEN (state) { state.token = null },
       SET_USER_INFO (state, data) { state.userInfo = data }
     },
@@ -34,16 +36,22 @@ const createStore = () => {
         vuexCtx.commit('SET_TOKEN', token)
         localStorage.setItem('token', token)
       },
+      saveTokenExp (vuexCtx, tokenExpire) {
+        vuexCtx.commit('SET_TOKEN_EXP', tokenExpire)
+        localStorage.setItem('tokenExpire', tokenExpire)
+      },
       saveUserInfo(vuexCtx, data) {
-        console.log('safe ', data) ;
-
         vuexCtx.commit('SET_USER_INFO', data)
         localStorage.setItem('userInfo', JSON.stringify(data))
       },
       initAuth (vuexCtx) {
         console.log('init auth');
+
         let token = localStorage.getItem('token')
         vuexCtx.commit('SET_TOKEN', token)
+
+        let tokenExpire = localStorage.getItem('tokenExpire')
+        vuexCtx.commit('SET_TOKEN_EXP', tokenExpire)
 
         let dataUser = localStorage.getItem('userInfo')
         vuexCtx.commit('SET_USER_INFO', JSON.parse(dataUser))

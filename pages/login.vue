@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
   layout: 'blank',
@@ -82,11 +82,13 @@ export default {
   },
   computed: {
     ...mapState(['appInfo']),
+    ...mapGetters(['isLogedIn'])
   },
   methods: {
-    ...mapActions(['saveToken','notify', 'saveUserInfo']),
+    ...mapActions(['saveToken', 'saveTokenExp','notify', 'saveUserInfo']),
     signIn() {
       this.loading = true
+
       this.$axios({
         method: 'post',
         url: '/users/login?include=user',
@@ -95,16 +97,21 @@ export default {
           password: this.password
         }
       }).then(response => {
-        console.log('login ', response)
-        // let token = response.data.token.split(' ')[1]
-        // let userData = {
-        //   id: response.data.id,
-        //   fullName: response.data.fullName,
-        //   avatarImageUrl: response.data.avatarImageUrl,
-        // }
         this.saveToken(response.data.id)
-        // this.saveUserInfo({token, userData})
-        // this.$router.push('/dashboard')
+        let exp = this.$moment(response.data.created).unix() + response.data.ttl
+        this.saveTokenExp(exp)
+        console.log('login ', response.data, exp, this.$moment().unix())
+
+        return this.$axios.$get('/users/' + response.data.userId, {
+          params: {
+            filter: { include: 'roles' },
+            access_token: response.data.id
+          }
+        })
+      }).then(user => {
+        console.log('userdetail ', user);
+        this.saveUserInfo(user)
+        this.$router.push('/')
         this.notify({ type: 'success', message: 'Selamat Datang ' + this.email })
         this.loading = false
       }).catch(error => {
@@ -132,13 +139,11 @@ export default {
     },
     isNeedToSignIn() {
       // is this user need to re-login ?
-      if (false) {
+      if (this.isLogedIn) {
         this.$router.push({
-          path: '/dashboard'
+          path: '/'
         })
       }
-    },
-    onDismissed() {
     }
   }
 }

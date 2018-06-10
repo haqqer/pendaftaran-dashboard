@@ -38,7 +38,7 @@
             flat
             outline
             color="error"
-            @click="logout()">
+            @click="onLogout()">
             Logout
           </v-btn>
         </v-card-actions>
@@ -48,19 +48,25 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      username: 'Gasing Mangunkarsa',
-      menu: false
-    }),
-    methods: {
-      logout () {
-        console.log('logout yok cuy');
+import { mapState, mapActions } from 'vuex'
 
-        // this.$store.dispatch('logout')
-        // this.$router.push('/login')
-        this.menu = false
-      }
+export default {
+  data: () => ({
+    username: 'Gasing Mangunkarsa',
+    menu: false
+  }),
+  computed: {
+    ...mapState(['userInfo'])
+  },
+  methods: {
+    ...mapActions(['logout']),
+    onLogout () {
+      console.log('logout yok cuy');
+
+      this.logout()
+      this.$router.push('/login')
+      this.menu = false
     }
   }
+}
 </script>

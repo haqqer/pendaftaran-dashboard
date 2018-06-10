@@ -39,7 +39,9 @@ module.exports = {
   plugins: [
     '@/plugins/fontawesome',
     '@/plugins/vee-validate',
-    '@/plugins/vuetify'
+    '@/plugins/vue-moment',
+    '@/plugins/vuetify',
+    '@/plugins/init-app'
   ],
 
   /*

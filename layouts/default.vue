@@ -69,6 +69,7 @@
 <script>
   import PopoverMenuUser from '@/components/PopoverMenuUser'
   export default {
+    middleware: ['check-auth'],
     data() {
       return {
         title: 'Vuetify.js',
