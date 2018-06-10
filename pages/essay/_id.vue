@@ -8,7 +8,8 @@
             size="48px"
             color="grey"
             class="mr-3">
-            <img :src="'https://randomuser.me/api/portraits/women/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
+            <img v-if="registrar.gender == 'female'" :src="'https://randomuser.me/api/portraits/women/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
+            <img v-else :src="'https://randomuser.me/api/portraits/men/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
           </v-avatar>
           <div>
             <h3 class="title mb-0">
@@ -40,23 +41,25 @@
         <v-divider></v-divider>
         <v-card-actions class="">
           <v-layout align-center justify-center>
-            <!-- <v-text-field
-              v-model="nilai"
-              label="Nilai"
-              data-vv-as="Nilai"
-              :error-messages="errors.collect('nilai')"
-              v-validate="'required|min_value:1|max_value:100'"
-              data-vv-name="nilai"
-            ></v-text-field> -->
             <v-flex md6>
-              <v-btn block round color="primary">Selengkapnya</v-btn>
             </v-flex>
           </v-layout>
         </v-card-actions>
       </v-card>
     </v-flex>
+     <v-btn
+      color="primary"
+      dark
+      large
+      fixed
+      bottom
+      right
+      fab
+    >
+      <v-icon>assignment</v-icon>
+    </v-btn>
   </v-layout>
-  <v-layout v-else  justify-center>
+  <v-layout v-else justify-center>
     <v-progress-circular
       :size="70"
       :width="7"

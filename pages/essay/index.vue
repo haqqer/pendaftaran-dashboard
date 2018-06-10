@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-layout v-if="registrarItems.length > 0">
     <v-flex md8>
       <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
         <v-card-title>
@@ -8,7 +8,8 @@
             size="48px"
             color="grey"
             class="mr-3">
-            <img :src="'https://randomuser.me/api/portraits/women/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
+            <img v-if="registrar.gender == 'female'" :src="'https://randomuser.me/api/portraits/women/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
+            <img v-else :src="'https://randomuser.me/api/portraits/men/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
           </v-avatar>
           <div>
             <h3 class="title mb-0">
@@ -55,6 +56,14 @@
         </v-card-actions>
       </v-card>
     </v-flex>
+  </v-layout>
+  <v-layout v-else justify-center>
+    <v-progress-circular
+      :size="70"
+      :width="7"
+      indeterminate
+      style=""
+      color="primary"></v-progress-circular>
   </v-layout>
 </template>
 
