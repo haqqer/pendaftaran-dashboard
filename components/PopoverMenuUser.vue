@@ -10,12 +10,12 @@
       <v-btn slot="activator" flat>
         <v-avatar size="32px">
           <img
-            src="https://randomuser.me/api/portraits/men/85.jpg"
+            :src="avatar"
             alt="user"
           >
         </v-avatar>
         <span class="ml-1">
-          {{ username }}
+          {{ userInfo.username }}
         </span>
         <v-icon>arrow_drop_down</v-icon>
       </v-btn>
@@ -23,11 +23,11 @@
         <v-list>
           <v-list-tile avatar>
             <v-list-tile-avatar>
-              <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="John">
+              <img :src="avatar" alt="John">
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>{{ username }}</v-list-tile-title>
-              <v-list-tile-sub-title>Ranger Ninja Srorm</v-list-tile-sub-title>
+              <v-list-tile-title>{{ userInfo.roles[0].description }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{ userInfo.roles[0].name }}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -52,7 +52,7 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   data: () => ({
-    username: 'Gasing Mangunkarsa',
+    avatar: '/images/default-profile.png',
     menu: false
   }),
   computed: {
