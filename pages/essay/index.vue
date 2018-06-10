@@ -1,5 +1,5 @@
 <template>
-  <v-layout v-if="registrarItems.length > 0">
+  <v-layout v-if="true">
     <v-flex md8>
       <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
         <v-card-title>
@@ -101,9 +101,9 @@ export default {
     },
     fetchDataRegistrars () {
       this.loadingRegistrar = true
-      this.$axios.get('http://128.199.72.101:3000/api/registrars').then(response => {
-        this.registrarItems = response.data
-        console.log('registrar ', response.data)
+      this.$axios.$get('/registrars').then(response => {
+        this.registrarItems = response
+        console.log('registrar ', response)
         this.loadingRegistrar = false
       }).catch(error => {
         console.log('--- awh error ----')

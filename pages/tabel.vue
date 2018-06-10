@@ -40,9 +40,9 @@ export default {
   methods: {
     fetchDataRegistrars () {
       this.loadingRegistrar = true
-      this.$axios.get('http://128.199.72.101:3000/api/registrars').then(response => {
-        this.registrarItems = response.data
-        console.log('registrar ', response.data)
+      this.$axios.$get('/registrars').then(response => {
+        this.registrarItems = response
+        console.log('registrar ', response)
         this.loadingRegistrar = false
       }).catch(error => {
         console.log('--- awh error ----')

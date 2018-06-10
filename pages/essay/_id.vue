@@ -93,9 +93,9 @@ export default {
                 .length;
     },
     getDataRegistrar () {
-      this.$axios.get('http://128.199.72.101:3000/api/registrars/' + this.$route.params.id).then(response => {
-        this.registrar = response.data
-        console.log('registrar ', response.data)
+      this.$axios.$get('/registrars/' + this.$route.params.id).then(response => {
+        this.registrar = response
+        console.log('registrar ', response)
         // this.loadingRegistrar = false
       }).catch(error => {
         console.log('--- awh error ----')
