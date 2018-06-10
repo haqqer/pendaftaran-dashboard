@@ -89,7 +89,7 @@ export default {
     ...mapGetters(['isLogedIn'])
   },
   methods: {
-    ...mapActions(['saveToken', 'saveTokenExp','notify', 'saveUserInfo']),
+    ...mapActions(['saveToken', 'saveTokenExp','notify', 'saveUserInfo', 'logout']),
     signIn() {
       this.loading = true
 
@@ -114,9 +114,14 @@ export default {
         })
       }).then(user => {
         console.log('userdetail ', user);
-        this.saveUserInfo(user)
-        this.$router.push('/')
-        this.notify({ type: 'success', message: 'Selamat Datang ' + this.email })
+        if (user.roles.length < 1) {
+          this.notify({ type: 'error', message: 'Maaf, akun ' + user.username + ' belum bisa digunakan. Hubungi admin' })
+          this.logout()
+        } else {
+          this.saveUserInfo(user)
+          this.$router.push('/')
+          this.notify({ type: 'success', message: 'Selamat Datang ' + user.username })
+        }
         this.loading = false
       }).catch(error => {
         console.log('login error ', error)
