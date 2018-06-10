@@ -47,7 +47,7 @@
         </v-card-actions>
       </v-card>
     </v-flex>
-     <v-btn
+    <v-btn
       color="primary"
       dark
       large
@@ -55,9 +55,31 @@
       bottom
       right
       fab
+      @click.stop="dialog = true"
     >
       <v-icon>assignment</v-icon>
     </v-btn>
+    <v-dialog v-model="dialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline pb-0">Beri nilai untuk {{ registrar.fullname }}</v-card-title>
+        <v-card-text>
+          <v-text-field
+              v-model="score"
+              label="Nilai"
+              data-vv-as="Nilai"
+              :error-messages="errors.collect('nilai')"
+              v-validate="'required|min_value:1|max_value:100'"
+              prepend-icon="assignment"
+              data-vv-name="nilai"
+            ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" outline round @click.native="dialog = false">Batal</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" round @click.native="dialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
   <v-layout v-else justify-center>
     <v-progress-circular
@@ -73,7 +95,9 @@
 export default {
   data () {
     return {
-      registrar: null
+      registrar: null,
+      dialog: false,
+      score: 0
     }
   },
   methods: {
