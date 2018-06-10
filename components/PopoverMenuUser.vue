@@ -64,7 +64,7 @@ export default {
       console.log('logout yok cuy');
 
       this.logout()
-      this.$router.push('/login')
+      this.$router.push('/auth/login')
       this.menu = false
     }
   }

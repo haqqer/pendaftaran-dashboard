@@ -9,12 +9,12 @@ export default function ({ store, route, redirect }) {
     setTimeout(() => {
       store.dispatch('notify', { type: 'error', message: 'Token expired, silakan login kembali' });
       store.dispatch('logout')
-      redirect('/login')
+      redirect('/auth/login')
     }, time * 1000)
   }
 
   if(!store.getters.isLogedIn) {
-    redirect('/login')
+    redirect('/auth/login')
     store.dispatch('notify', { type: 'warning', message: 'Silakan login terlebih dahulu' });
   } else {
     startSession()

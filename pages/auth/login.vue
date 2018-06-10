@@ -1,8 +1,8 @@
 <template>
   <v-content>
     <v-container>
-      <v-layout>
-        <v-flex md6 offset-md3>
+      <v-layout justify-center>
+        <v-flex md6 justify-center>
           <v-layout row>
             <v-flex xs12>
               <v-alert type="error" v-model="alert.show" dismissible>
@@ -54,6 +54,10 @@
               </v-container>
             </v-card-text>
           </v-card>
+          <div class="text-xs-center title py-4">
+            <nuxt-link to="/auth/register">Bikin akun</nuxt-link>
+            kalau belum punya
+          </div>
         </v-flex>
       </v-layout>
     </v-container>
