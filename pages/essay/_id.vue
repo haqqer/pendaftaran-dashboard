@@ -61,7 +61,7 @@
     </v-btn>
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
-        <v-card-title class="headline pb-0">Beri nilai untuk {{ registrar.fullname }}</v-card-title>
+        <v-card-title class="title pb-0">Beri nilai untuk {{ registrar.fullname }}</v-card-title>
         <v-card-text>
           <v-text-field
               v-model="score"
