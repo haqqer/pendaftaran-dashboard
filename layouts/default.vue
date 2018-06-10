@@ -111,6 +111,12 @@ export default {
       this.notify({ type: 'error', message: '' });
     },
   },
+  mounted () {
+    console.log(this.$vuetify.breakpoint.name);
+    this.$nextTick(() => {
+      if (this.$vuetify.breakpoint.name == 'xs') this.drawer = false
+    });
+  },
   components: { PopoverMenuUser }
 }
 </script>

@@ -55,7 +55,6 @@
     <v-btn
       color="primary"
       dark
-      large
       fixed
       bottom
       right
