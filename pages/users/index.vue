@@ -10,6 +10,7 @@
         hide-headers
       >
         <template slot="items" slot-scope="props">
+          <td class="text-xs-left">{{ props.index + 1 }}</td>
           <td class="text-xs-left">{{ props.item.username }}</td>
           <td class="text-xs-left">{{ props.item.email }}</td>
           <td class="text-xs-left">
