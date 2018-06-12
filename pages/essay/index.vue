@@ -1,5 +1,5 @@
 <template>
-  <v-layout v-if="true">
+  <v-layout v-if="!loadingRegistrar">
     <v-flex md8>
       <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
         <v-card-title>
@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
@@ -77,6 +79,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['notify']),
     iconGender (gender) {
       switch (gender) {
         case 'male':
@@ -130,6 +133,8 @@ export default {
           console.log('--- error lain ----')
           console.log('Error', error.message);
         }
+        this.notify({ type: 'error', message: error.message })
+        this.loadingRegistrar = false
         console.log('--- error konfig ----')
         console.log(error.config);
       })

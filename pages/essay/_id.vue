@@ -156,6 +156,7 @@ export default {
           console.log('--- error lain ----')
           console.log('Error', error.message);
         }
+        this.notify({ type: 'error', message: error.message })
         console.log('--- error konfig ----')
         console.log(error.config);
       })
