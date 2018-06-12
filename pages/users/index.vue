@@ -17,7 +17,10 @@
             <v-edit-dialog
               lazy
             >
-              <div>{{ props.item.roles.length > 0 ? props.item.roles[0].name : 'BELUM PUNYA ROLE' }}</div>
+              <div>
+                {{ props.item.roles.length > 0 ? props.item.roles[0].name : 'BELUM PUNYA ROLE' }}
+                <v-icon small color="info">edit</v-icon>
+              </div>
               <div slot="input" class="mt-3 subheading">update role <strong>{{ props.item.username }}</strong></div>
               <v-select
                 slot="input"
@@ -35,9 +38,6 @@
                 <v-btn color="primary" :loading="loadingUser" @click.stop="updateRole(props.item.id)">OK</v-btn>
               </v-layout>
             </v-edit-dialog>
-          </td>
-          <td class="text-xs-left">
-            <v-btn icon color="info" flat :to="props.item.id" append><v-icon>edit</v-icon></v-btn>
           </td>
         </template>
       </v-data-table>
