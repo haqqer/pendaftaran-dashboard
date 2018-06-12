@@ -84,18 +84,21 @@ export default {
       title: 'Vuetify.js',
       darkTheme: false,
       drawer: true,
-      items: [
+      userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
         { icon: 'assignment', title: 'Essay', to: '/essay' },
         { icon: 'table_chart', title: 'Tabel', to: '/tabel' },
-        { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+        // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+      ],
+      adminItems: [
+        { icon: 'person', title: 'User', to: '/users' }
       ],
       miniVariant: false,
       inputSearchClass: ''
     }
   },
   computed: {
-    ...mapState(['notification']),
+    ...mapState(['notification', 'userInfo']),
     snackbarMessage: {
       get() {
         return this.notification.active;
@@ -103,6 +106,12 @@ export default {
       set(val) {
         this.notificationToggle();
       }
+    },
+    items () {
+      if (this.userInfo.roles[0].name == 'admin') {
+        return [ ...this.userItems, ...this.adminItems ]
+      }
+      return this.userItems
     }
   },
   methods: {
