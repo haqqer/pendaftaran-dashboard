@@ -62,7 +62,7 @@
     >
       <v-icon>assignment</v-icon>
     </v-btn>
-    <v-dialog v-model="dialog" max-width="290">
+    <v-dialog v-model="dialog" :persistent="loading" max-width="290">
       <v-card>
         <v-card-title class="title pb-0">Beri nilai untuk {{ registrar.fullname }}</v-card-title>
         <v-card-text>
