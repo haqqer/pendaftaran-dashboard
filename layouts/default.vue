@@ -60,7 +60,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer app class="justify-center">
+    <v-footer class="justify-center">
       &copy; {{ new Date().getUTCFullYear() }} — <a href="https://github.com/creativefls/"><strong>CreativeFLS</strong></a>
     </v-footer>
     <v-snackbar

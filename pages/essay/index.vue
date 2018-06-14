@@ -8,8 +8,7 @@
             size="48px"
             color="grey"
             class="mr-3">
-            <img v-if="registrar.gender == 'female'" :src="'https://randomuser.me/api/portraits/women/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
-            <img v-else :src="'https://randomuser.me/api/portraits/men/' + Math.floor(Math.random() * 99) + '.jpg'" alt="">
+            <img :src="'https://img.devidentify.com/' + registrar.email" alt="">
           </v-avatar>
           <div>
             <h3 class="title mb-0">
