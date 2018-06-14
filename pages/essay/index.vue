@@ -1,5 +1,5 @@
 <template>
-  <v-layout v-if="!loadingRegistrar">
+  <v-layout v-if="registrarItems.length > 0">
     <v-flex md8>
       <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
         <v-card-title>
@@ -55,6 +55,7 @@
           </v-layout>
         </v-card-actions>
       </v-card>
+      <v-btn v-if="!maxReached" block color="info" large round :loading="loadingRegistrar" @click="loadMoreData()">Load More</v-btn>
     </v-flex>
   </v-layout>
   <v-layout v-else justify-center>
@@ -74,7 +75,10 @@ export default {
   data () {
     return {
       registrarItems: [],
-      loadingRegistrar: false
+      loadingRegistrar: false,
+      skip: 0,
+      limit: 5,
+      maxReached: false
     }
   },
   methods: {
@@ -102,14 +106,42 @@ export default {
                 .slice(0, -1)    // remove the last full or partial word
                 .join(" ") + " ..."
     },
+    loadMoreData () {
+      this.skip += 1
+      this.fetchDataRegistrars()
+    },
+    countDataRegistrar () {
+      this.$axios.$get('/registrarscors/count', {
+        params: {
+          where: {
+            essay: { lt: 10},
+          }
+        }
+      }).then(response => {
+        console.log('count ', response);
+      }).catch(error => {
+        console.log(error);
+      })
+    },
     fetchDataRegistrars () {
       this.loadingRegistrar = true
       this.$axios.$get('/registrars', {
         params: {
-          filter: { include: 'scores' }
+          filter: {
+            include: {
+              relation: 'scores',
+              scope: {
+                // where: { essay: 0 },
+                include: 'scoredBy'
+              }
+            },
+            skip: this.skip * this.limit,
+            limit: this.limit
+          }
         }
       }).then(response => {
-        this.registrarItems = response
+        // this.countDataRegistrar()
+        this.registrarItems = [ ...this.registrarItems, ...response ]
         console.log('registrar ', response)
         this.loadingRegistrar = false
       }).catch(error => {
