@@ -162,20 +162,15 @@ export default {
     },
     submitScore () {
       this.loading = true
-      let data = {
+
+      this.$axios.$post('/RegistrarScors/upsertWithWhere?where[registrarId]=' + this.registrar.id, {
+        essay: this.score,
         registrarId: this.registrar.id,
         scoredById: this.userInfo.id,
-        essay: this.score
-      }
-      if (this.registrar.scores) {
-        data.achievement = this.registrar.scores.achievement,
-        data.organization = this.registrar.scores.organization,
-        data.socialActivity = this.registrar.scores.socialActivity,
-        data.id = this.registrar.scores.id
-      }
-      this.$axios.$post('/RegistrarScors/replaceOrCreate', data).then(response => {
+      }).then(response => {
         this.notify({ type: 'success', message: 'Berhasil nilai  ' + this.registrar.fullname + ' ' + this.score })
         this.$router.push('/essay')
+        // this.getDataRegistrar()
         this.loading = false
         this.dialog = false
       }).catch(error => {
