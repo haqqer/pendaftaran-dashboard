@@ -22,6 +22,7 @@
             <v-btn v-if="registrar.socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.socmed.line" target="_blank">
               <v-icon>fab fa-line</v-icon>
             </v-btn>
+            <div class="caption">{{ registrar.id }}</div>
           </div>
         </v-card-title>
         <v-card-text>
