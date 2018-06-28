@@ -38,13 +38,13 @@
           <p>{{ registrar.essayCaseStudy }}</p>
 
           <v-divider></v-divider>
-          <template v-if="registrar.scores">
-            <h4 class="subheading">Nilai - </h4>
-            <div><strong>Prestasi</strong> {{ registrar.scores.achievement }}</div>
-            <div><strong>Organisasi</strong> {{ registrar.scores.organization }}</div>
-            <div><strong>Sosial</strong> {{ registrar.scores.socialActivity }}</div>
-            <div><strong>Essay</strong> {{ registrar.scores.essay }}</div>
-          </template>
+
+          <h4 class="subheading">Nilai - </h4>
+          <div><strong>Prestasi</strong> {{ registrar.scoreAuto.achievement }}</div>
+          <div><strong>Organisasi</strong> {{ registrar.scoreAuto.organization }}</div>
+          <div><strong>Sosial</strong> {{ registrar.scoreAuto.socialActivity }}</div>
+          <div><strong>Essay</strong> {{ registrar.scoreEssay }}</div>
+          <div><strong>Total</strong> {{ registrar.scoreTotal }}</div>
         </v-card-text>
         <v-card-actions class="">
 
@@ -129,7 +129,6 @@ export default {
     getDataRegistrar () {
       this.$axios.$get('/registrars/' + this.$route.params.id, {
         params: {
-          filter: { include: 'scores' }
         }
       }).then(response => {
         this.registrar = response
@@ -163,10 +162,14 @@ export default {
     submitScore () {
       this.loading = true
 
-      this.$axios.$post('/RegistrarScors/upsertWithWhere?where[registrarId]=' + this.registrar.id, {
-        essay: this.score,
-        registrarId: this.registrar.id,
-        scoredById: this.userInfo.id,
+      let registrar = {...this.registrar}
+      registrar.scoreEssay = this.score
+      delete registrar['id']
+
+      this.$axios({
+        method: 'PUT',
+        url: '/Registrars/' + this.registrar.id,
+        data: registrar
       }).then(response => {
         this.notify({ type: 'success', message: 'Berhasil nilai  ' + this.registrar.fullname + ' ' + this.score })
         this.$router.push('/essay')
