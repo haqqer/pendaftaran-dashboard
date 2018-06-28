@@ -6,22 +6,28 @@
         :items="registrarItems"
         class="elevation-1"
         :loading="loadingRegistrar"
+        :headers="headers"
+        disable-initial-sort
         hide-actions
-        hide-headers
       >
         <template slot="items" slot-scope="props">
           <td>{{ props.item.fullname }}</td>
           <td class="text-xs-left">{{ props.item.institution }}</td>
-          <td class="text-xs-left">{{ props.item.fat }}</td>
-          <td class="text-xs-left">{{ props.item.carbs }}</td>
-          <td class="text-xs-left">{{ props.item.protein }}</td>
-          <td class="text-xs-left">{{ props.item.iron }}</td>
+          <td class="text-xs-left">{{ props.item.scoreAuto.achievement }}</td>
+          <td class="text-xs-left">{{ props.item.scoreAuto.organization }}</td>
+          <td class="text-xs-left">{{ props.item.scoreAuto.socialActivity }}</td>
+          <td class="text-xs-left">
+            <strong>{{ props.item.scoreAuto.total }}</strong>
+          </td>
+          <td class="text-xs-left">{{ props.item.scoreEssay }}</td>
+          <td class="text-xs-left">
+            <strong>{{ props.item.scoreTotal }}</strong>
+          </td>
         </template>
       </v-data-table>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" flat nuxt to="/inspire">Continue</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -33,6 +39,16 @@ import VuetifyLogo from '~/components/VuetifyLogo.vue'
 export default {
   data () {
     return {
+      headers: [
+        { text: 'Nama', value: 'name' },
+        { text: 'Kampus', value: 'university' },
+        { text: 'Prestasi', value: 'achievement' },
+        { text: 'Organisasi', value: 'organizaion' },
+        { text: 'Aktifitas Sosial', value: 'social' },
+        { text: 'Jumlah', value: 'totalAuto' },
+        { text: 'Essay', value: 'essay' },
+        { text: 'Jumlah Semua', value: 'total' },
+      ],
       registrarItems: [],
       loadingRegistrar: false
     }
