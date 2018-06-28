@@ -130,7 +130,12 @@ export default {
         params: {
           filter: {
             // order: 'scoreAuto.total DESC',
-            where: { roomFirst: 'Poverty' },
+            where: {
+              and : [
+                { roomFirst: 'Poverty' },
+                { scoreEssay: { lt: 5 } }
+              ]
+            },
             skip: this.skip * this.limit,
             limit: this.limit
           }
