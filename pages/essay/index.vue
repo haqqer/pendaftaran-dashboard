@@ -1,5 +1,13 @@
 <template>
-  <v-layout v-if="registrarItems.length > 0">
+  <v-layout v-if="registrarItems.length < 1 && loadingRegistrar" justify-center>
+    <v-progress-circular
+      :size="70"
+      :width="7"
+      indeterminate
+      style=""
+      color="primary"></v-progress-circular>
+  </v-layout>
+  <v-layout v-else>
     <v-flex md8>
       <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
         <v-card-title>
@@ -39,13 +47,13 @@
           <p>{{ shortText(registrar.essayCaseStudy) }}</p>
 
           <v-divider></v-divider>
-          <template v-if="registrar.scores">
-            <h4 class="subheading">Nilai - </h4>
-            <div><strong>Prestasi</strong> {{ registrar.scores.achievement }}</div>
-            <div><strong>Organisasi</strong> {{ registrar.scores.organization }}</div>
-            <div><strong>Sosial</strong> {{ registrar.scores.socialActivity }}</div>
-            <div><strong>Essay</strong> {{ registrar.scores.essay }}</div>
-          </template>
+
+          <h4 class="subheading">Nilai - </h4>
+          <div><strong>Prestasi</strong> {{ registrar.scoreAuto.achievement }}</div>
+          <div><strong>Organisasi</strong> {{ registrar.scoreAuto.organization }}</div>
+          <div><strong>Sosial</strong> {{ registrar.scoreAuto.socialActivity }}</div>
+          <div><strong>Essay</strong> {{ registrar.scoreEssay }}</div>
+          <div><strong>Total</strong> {{ registrar.scoreTotal }}</div>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="">
@@ -58,14 +66,6 @@
       </v-card>
       <v-btn v-if="!maxReached" block color="info" large round :loading="loadingRegistrar" @click="loadMoreData()">Load More</v-btn>
     </v-flex>
-  </v-layout>
-  <v-layout v-else justify-center>
-    <v-progress-circular
-      :size="70"
-      :width="7"
-      indeterminate
-      style=""
-      color="primary"></v-progress-circular>
   </v-layout>
 </template>
 
@@ -129,13 +129,8 @@ export default {
       this.$axios.$get('/registrars', {
         params: {
           filter: {
-            include: {
-              relation: 'scores',
-              scope: {
-                // where: { essay: 0 },
-                include: 'scoredBy'
-              }
-            },
+            // order: 'scoreAuto.total DESC',
+            where: { roomFirst: 'Poverty' },
             skip: this.skip * this.limit,
             limit: this.limit
           }
