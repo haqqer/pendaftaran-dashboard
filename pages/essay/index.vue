@@ -133,7 +133,11 @@ export default {
             where: {
               and : [
                 { roomFirst: 'Poverty' },
-                { acceptanceStatus: 0 },
+                { and: [
+                  {acceptanceStatus: { neq: 1 }},
+                  {acceptanceStatus: { neq: 2 }},
+                  {acceptanceStatus: { neq: 3 }},
+                ]},
                 { scoreEssay: { lt: 5 } }
               ]
             },

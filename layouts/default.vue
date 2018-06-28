@@ -86,8 +86,8 @@ export default {
       drawer: true,
       userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
-        { icon: 'assignment', title: 'Essay', to: '/essay' },
-        { icon: 'table_chart', title: 'Tabel', to: '/tabel' },
+        { icon: 'assignment', title: 'Penilaian', to: '/essay' },
+        { icon: 'table_chart', title: 'Seleksi', to: '/tabel' },
         // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],
       adminItems: [
