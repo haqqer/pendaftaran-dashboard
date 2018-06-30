@@ -99,7 +99,7 @@ export default {
       userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
         { icon: 'assignment', title: 'Penilaian', to: '/essay' },
-        { icon: 'table_chart', title: 'Seleksi', to: '/tabel' },
+        { icon: 'table_chart', title: 'Seleksi', to: '/pendaftar' },
         // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],
       adminItems: [
