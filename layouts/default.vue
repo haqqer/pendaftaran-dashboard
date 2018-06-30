@@ -18,16 +18,17 @@
           </v-list-tile>
         </v-list>
       </v-toolbar>
-      <v-text-field
-        @focus="onSearchFocus()"
-        @blur="inputSearchClass = ''"
-        class="elevation-0 my-2"
-        :class="inputSearchClass"
-        placeholder="Pencarian"
-        solo
-        prepend-icon="search"
-        ></v-text-field>
-      <v-divider></v-divider>
+      <v-list class=" pa-0">
+        <v-text-field
+          @focus="onSearchFocus()"
+          class="elevation-0 "
+          placeholder="Pencarian"
+          solo
+          clearable
+          append-icon="search"
+          ></v-text-field>
+        <v-divider></v-divider>
+      </v-list>
       <v-list>
         <v-list-tile
           router
