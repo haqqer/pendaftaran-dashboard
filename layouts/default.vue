@@ -18,6 +18,15 @@
           </v-list-tile>
         </v-list>
       </v-toolbar>
+      <v-text-field
+        @focus="onSearchFocus()"
+        @blur="inputSearchClass = ''"
+        class="elevation-0 my-2"
+        :class="inputSearchClass"
+        placeholder="Pencarian"
+        solo
+        prepend-icon="search"
+        ></v-text-field>
       <v-divider></v-divider>
       <v-list>
         <v-list-tile
@@ -54,15 +63,7 @@
         @click.stop="miniVariant = !miniVariant">
         <v-icon>menu</v-icon>
       </v-btn>
-      <v-text-field
-        @focus="inputSearchClass = 'elevation-3'"
-        @blur="inputSearchClass = ''"
-        class="elevation-0"
-        :class="inputSearchClass"
-        placeholder="Pencarian"
-        solo
-        prepend-icon="search"
-        ></v-text-field>
+
       <v-spacer></v-spacer>
       <popover-menu-user></popover-menu-user>
     </v-toolbar>
@@ -130,6 +131,10 @@ export default {
     notificationToggle() {
       this.notify({ type: 'error', message: '' });
     },
+    onSearchFocus () {
+      this.inputSearchClass = 'elevation-3'
+      this.miniVariant = false
+    }
   },
   mounted () {
     console.log(this.$vuetify.breakpoint.name);
