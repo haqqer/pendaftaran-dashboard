@@ -19,7 +19,7 @@
         </v-list>
       </v-toolbar>
       <v-divider></v-divider>
-      <v-list dense>
+      <v-list>
         <v-list-tile
           router
           :to="item.to"
@@ -31,6 +31,17 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+      <v-divider class="mt-4"></v-divider>
+      <v-list>
+        <v-list-tile router to="/auth/logout">
+          <v-list-tile-action>
+            <v-icon color="error" v-html="'exit_to_app'"></v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="'Logout'"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
