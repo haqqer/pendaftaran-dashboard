@@ -64,7 +64,14 @@
         @click.stop="miniVariant = !miniVariant">
         <v-icon>menu</v-icon>
       </v-btn>
-
+       <v-select
+          :items="roomLists"
+          v-model="roomSelected"
+          label="Room"
+          item-text="name"
+          item-value="value"
+          solo
+        ></v-select>
       <v-spacer></v-spacer>
       <popover-menu-user></popover-menu-user>
     </v-toolbar>
@@ -107,7 +114,16 @@ export default {
         { icon: 'person', title: 'User', to: '/users' }
       ],
       miniVariant: false,
-      inputSearchClass: ''
+      inputSearchClass: '',
+      roomLists: [
+        { name: 'All', color: 'primary', value: '' },
+        { name: 'Human Capital', color: 'primary', value: 'Human Capital' },
+        { name: 'Education', color: 'secondary', value: 'Education' },
+        { name: 'Digital', color: 'success', value: 'Digital' },
+        { name: 'Urban Planning', color: 'info', value: 'Urban Planning' },
+        { name: 'Entrepreneurship', color: 'warning', value: 'Entrepreneurship' },
+        { name: 'Proverty', color: 'error', value: 'Poverty' },
+      ]
     }
   },
   computed: {
@@ -120,6 +136,10 @@ export default {
         this.notificationToggle();
       }
     },
+    roomSelected: {
+      get () { return this.$store.state.roomSelected },
+      set (val) { this.setRoomSelected(val) }
+    },
     items () {
       if (this.userInfo.roles[0].name == 'admin') {
         return [ ...this.userItems, ...this.adminItems ]
@@ -128,7 +148,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['notify']),
+    ...mapActions(['notify', 'setRoomSelected']),
     notificationToggle() {
       this.notify({ type: 'error', message: '' });
     },

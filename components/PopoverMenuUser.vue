@@ -1,5 +1,5 @@
 <template>
-  <div class="text-xs-center">
+  <div class="text-xs-center hidden-sm-and-down">
     <v-menu
       offset-y
       left

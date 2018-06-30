@@ -7,6 +7,7 @@ const createStore = () => {
         appName: 'FLS 2018 - beta',
         appLogo: '/images/fls-logo-mini.png'
       },
+      roomSelected: '',
       userInfo: null,
       token: null,
       tokenExpire: null,
@@ -25,7 +26,8 @@ const createStore = () => {
       SET_TOKEN (state, token) { state.token = token },
       SET_TOKEN_EXP (state, data) { state.tokenExpire = data },
       CLEAR_TOKEN (state) { state.token = null },
-      SET_USER_INFO (state, data) { state.userInfo = data }
+      SET_USER_INFO (state, data) { state.userInfo = data },
+      SET_ROOM_SELECTED (state, data) { state.roomSelected = data }
     },
     actions: {
       initApp (vuexCtx) {
@@ -63,6 +65,9 @@ const createStore = () => {
         vuexCtx.commit('CLEAR_TOKEN')
         localStorage.removeItem('token')
         localStorage.removeItem('userInfo')
+      },
+      setRoomSelected (vuexCtx, payload) {
+        vuexCtx.commit('SET_ROOM_SELECTED', payload)
       }
     },
     getters: {

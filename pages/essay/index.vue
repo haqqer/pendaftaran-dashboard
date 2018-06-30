@@ -59,7 +59,7 @@
         <v-card-actions class="">
           <v-layout align-center justify-center>
             <v-flex md6>
-              <v-btn block round color="primary" :to="registrar.id" append>Selengkapnya</v-btn>
+              <v-btn block round color="primary" :to="registrar.id" append>Baca selengkapnya</v-btn>
             </v-flex>
           </v-layout>
         </v-card-actions>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   data () {
@@ -80,6 +80,15 @@ export default {
       skip: 0,
       limit: 5,
       maxReached: false
+    }
+  },
+  computed: {
+    ...mapState(['roomSelected'])
+  },
+  watch: {
+    roomSelected () {
+      this.registrarItems = []
+      this.fetchDataRegistrars()
     }
   },
   methods: {
@@ -111,19 +120,6 @@ export default {
       this.skip += 1
       this.fetchDataRegistrars()
     },
-    countDataRegistrar () {
-      this.$axios.$get('/registrarscors/count', {
-        params: {
-          where: {
-            essay: { lt: 10},
-          }
-        }
-      }).then(response => {
-        console.log('count ', response);
-      }).catch(error => {
-        console.log(error);
-      })
-    },
     fetchDataRegistrars () {
       this.loadingRegistrar = true
       this.$axios.$get('/registrars', {
@@ -132,7 +128,7 @@ export default {
             // order: 'scoreAuto.total DESC',
             where: {
               and : [
-                // { roomFirst: 'Poverty' },
+                { roomFirst: { like: this.roomSelected } },
                 { and: [
                   {acceptanceStatus: { neq: 1 }},
                   {acceptanceStatus: { neq: 2 }},
@@ -146,7 +142,6 @@ export default {
           }
         }
       }).then(response => {
-        // this.countDataRegistrar()
         this.registrarItems = [ ...this.registrarItems, ...response ]
         console.log('registrar ', response)
         this.loadingRegistrar = false
