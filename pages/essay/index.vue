@@ -132,7 +132,7 @@ export default {
             // order: 'scoreAuto.total DESC',
             where: {
               and : [
-                { roomFirst: 'Poverty' },
+                // { roomFirst: 'Poverty' },
                 { and: [
                   {acceptanceStatus: { neq: 1 }},
                   {acceptanceStatus: { neq: 2 }},
