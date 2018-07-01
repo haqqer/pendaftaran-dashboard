@@ -56,7 +56,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="white" class="elevation-1" dense fixed app >
+    <v-toolbar color="white" class="elevation-1" fixed app >
       <v-toolbar-side-icon class="hidden-md-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
       <v-btn
         class="hidden-md-and-down"
