@@ -45,7 +45,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="white" class="elevation-1" fixed app scroll-off-screen>
+    <v-toolbar color="primary" class="elevation-1" fixed flat app dark scroll-off-screen>
       <v-toolbar-side-icon class="hidden-md-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
       <v-btn
         class="hidden-md-and-down"
@@ -55,9 +55,10 @@
       </v-btn>
       <v-text-field
           @focus="onSearchFocus()"
-          class="elevation-0 "
+          class="mt-2"
           placeholder="Pencarian"
-          solo
+          solo-inverted
+          flat
           clearable
           append-icon="search"
           ></v-text-field>
@@ -130,7 +131,6 @@ export default {
     },
     onSearchFocus () {
       this.inputSearchClass = 'elevation-3'
-      this.miniVariant = false
     }
   },
   mounted () {

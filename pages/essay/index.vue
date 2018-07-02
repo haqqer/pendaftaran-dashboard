@@ -22,6 +22,7 @@
               {{ registrar.fullname }}
               <v-icon :color="registrar.gender == 'male' ? 'info' : 'pink'">{{ iconGender(registrar.gender) }}</v-icon>
             </h3>
+            <div class="subitle">{{ registrar.institution }}</div>
             <v-btn v-if="registrar.socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.socmed.instagram" target="_blank">
               <v-icon>fab fa-instagram</v-icon>
             </v-btn>
@@ -40,8 +41,7 @@
         <v-card-text>
           <p style="text-transform: capitalize;">
             {{ registrar.dateOfBirth | moment('from', 'now', true) }} ,
-            {{ registrar.institution.toLowerCase() }} ,
-            {{ registrar.city.toLowerCase() }}
+            Domisili {{ registrar.city.toLowerCase() }}
           </p>
           <strong>Motivasi Ikut FLS</strong>
           <small class="ml-2">( {{ wordCount(registrar.essayMotivationJoin) }} kata )</small>
