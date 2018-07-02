@@ -18,17 +18,6 @@
           </v-list-tile>
         </v-list>
       </v-toolbar>
-      <v-list class=" pa-0">
-        <v-text-field
-          @focus="onSearchFocus()"
-          class="elevation-0 "
-          placeholder="Pencarian"
-          solo
-          clearable
-          append-icon="search"
-          ></v-text-field>
-        <v-divider></v-divider>
-      </v-list>
       <v-list>
         <v-list-tile
           router
@@ -56,7 +45,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="white" class="elevation-1" fixed app >
+    <v-toolbar color="white" class="elevation-1" fixed app scroll-off-screen>
       <v-toolbar-side-icon class="hidden-md-and-up" @click="drawer = !drawer"></v-toolbar-side-icon>
       <v-btn
         class="hidden-md-and-down"
@@ -64,14 +53,14 @@
         @click.stop="miniVariant = !miniVariant">
         <v-icon>menu</v-icon>
       </v-btn>
-       <v-select
-          :items="roomLists"
-          v-model="roomSelected"
-          label="Room"
-          item-text="name"
-          item-value="value"
+      <v-text-field
+          @focus="onSearchFocus()"
+          class="elevation-0 "
+          placeholder="Pencarian"
           solo
-        ></v-select>
+          clearable
+          append-icon="search"
+          ></v-text-field>
       <v-spacer></v-spacer>
       <popover-menu-user></popover-menu-user>
     </v-toolbar>
@@ -114,16 +103,7 @@ export default {
         { icon: 'person', title: 'User', to: '/users' }
       ],
       miniVariant: false,
-      inputSearchClass: '',
-      roomLists: [
-        { name: 'All', color: 'primary', value: '' },
-        { name: 'Human Capital', color: 'primary', value: 'Human Capital' },
-        { name: 'Education', color: 'secondary', value: 'Education' },
-        { name: 'Digital', color: 'success', value: 'Digital' },
-        { name: 'Urban Planning', color: 'info', value: 'Urban Planning' },
-        { name: 'Entrepreneurship', color: 'warning', value: 'Entrepreneurship' },
-        { name: 'Proverty', color: 'error', value: 'Poverty' },
-      ]
+      inputSearchClass: ''
     }
   },
   computed: {
@@ -136,10 +116,6 @@ export default {
         this.notificationToggle();
       }
     },
-    roomSelected: {
-      get () { return this.$store.state.roomSelected },
-      set (val) { this.setRoomSelected(val) }
-    },
     items () {
       if (this.userInfo.roles[0].name == 'admin') {
         return [ ...this.userItems, ...this.adminItems ]
@@ -148,7 +124,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['notify', 'setRoomSelected']),
+    ...mapActions(['notify']),
     notificationToggle() {
       this.notify({ type: 'error', message: '' });
     },

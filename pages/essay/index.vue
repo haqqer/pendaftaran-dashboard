@@ -75,11 +75,42 @@
       </v-card>
       <v-btn v-if="!maxReached" block color="info" large round :loading="loadingRegistrar" @click="loadMoreData()">Load More</v-btn>
     </v-flex>
+    <v-btn
+      color="primary"
+      dark
+      fixed
+      bottom
+      right
+      round
+      @click.stop="dialog = true"
+    >
+      {{ roomSelected.name }}
+    </v-btn>
+    <v-dialog v-model="dialog" max-width="290">
+      <v-card>
+        <v-card-title class="title">Tampil room</v-card-title>
+        <v-list>
+          <v-list-tile
+            ripple
+            @click.native.stop="selectRoom(room)"
+            class="cursor-pointer"
+            :key="i"
+            v-for="(room, i) in roomLists">
+            <v-list-tile-avatar>
+              <img :src="getRoomImageUrl(room.name)">
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title v-text="room.name"></v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
@@ -88,11 +119,21 @@ export default {
       loadingRegistrar: false,
       skip: 0,
       limit: 5,
-      maxReached: false
+      maxReached: false,
+      dialog: false,
+      roomSelected: { name: 'All', value: '' },
+      roomLists: [
+        { name: 'All', color: 'primary', value: '' },
+        { name: 'Human Capital', color: 'primary', value: 'Human Capital' },
+        { name: 'Education', color: 'secondary', value: 'Education' },
+        { name: 'Digital', color: 'success', value: 'Digital' },
+        { name: 'Urban Planning', color: 'info', value: 'Urban Planning' },
+        { name: 'Entrepreneurship', color: 'warning', value: 'Entrepreneurship' },
+        { name: 'Poverty', color: 'error', value: 'Poverty' },
+      ]
     }
   },
   computed: {
-    ...mapState(['roomSelected'])
   },
   watch: {
     roomSelected () {
@@ -137,7 +178,7 @@ export default {
             // order: 'scoreAuto.total DESC',
             where: {
               and : [
-                { roomFirst: { like: this.roomSelected } },
+                { roomFirst: { like: this.roomSelected.value } },
                 { and: [
                   {acceptanceStatus: { neq: 1 }},
                   {acceptanceStatus: { neq: 2 }},
@@ -197,6 +238,10 @@ export default {
         default:
           return 'https://user-images.githubusercontent.com/21119252/41821836-c2787e10-7810-11e8-8d2a-cc829bea4ae3.png'
       }
+    },
+    selectRoom (room) {
+      this.roomSelected = room
+      this.dialog = false
     }
   },
   created () {
