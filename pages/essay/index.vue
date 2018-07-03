@@ -9,6 +9,7 @@
   </v-layout>
   <v-layout v-else>
     <v-flex md8>
+      <div class="mb-4 mt-1 headline">Tampil room: <strong class="primary--text">{{ roomSelected.name }}</strong></div>
       <v-card v-for="registrar in registrarItems" :key="registrar.id" class="mb-4">
         <v-card-title>
           <v-avatar
@@ -100,7 +101,7 @@
               <img :src="getRoomImageUrl(room.name)">
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title v-text="room.name"></v-list-tile-title>
+              <v-list-tile-title :class="{'primary--text': room.name == roomSelected.name}">{{ room.name }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -110,7 +111,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   data () {
@@ -121,19 +122,19 @@ export default {
       limit: 5,
       maxReached: false,
       dialog: false,
-      roomSelected: { name: 'All', value: '' },
       roomLists: [
-        { name: 'All', color: 'primary', value: '' },
-        { name: 'Human Capital', color: 'primary', value: 'Human Capital' },
-        { name: 'Education', color: 'secondary', value: 'Education' },
-        { name: 'Digital', color: 'success', value: 'Digital' },
-        { name: 'Urban Planning', color: 'info', value: 'Urban Planning' },
-        { name: 'Entrepreneurship', color: 'warning', value: 'Entrepreneurship' },
-        { name: 'Poverty', color: 'error', value: 'Poverty' },
+        { name: 'All', value: '' },
+        { name: 'Human Capital', value: 'Human Capital' },
+        { name: 'Education', value: 'Education' },
+        { name: 'Digital', value: 'Digital' },
+        { name: 'Urban Planning', value: 'Urban Planning' },
+        { name: 'Entrepreneurship', value: 'Entrepreneurship' },
+        { name: 'Poverty', value: 'Poverty' },
       ]
     }
   },
   computed: {
+    ...mapState(['roomSelected'])
   },
   watch: {
     roomSelected () {
@@ -142,7 +143,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['notify']),
+    ...mapActions(['notify', 'setRoomSelected']),
     iconGender (gender) {
       switch (gender) {
         case 'male':
@@ -240,7 +241,7 @@ export default {
       }
     },
     selectRoom (room) {
-      this.roomSelected = room
+      this.setRoomSelected(room)
       this.dialog = false
     }
   },

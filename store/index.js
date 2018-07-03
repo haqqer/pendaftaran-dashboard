@@ -7,7 +7,7 @@ const createStore = () => {
         appName: 'FLS 2018 - beta',
         appLogo: '/images/fls-logo-mini.png'
       },
-      roomSelected: '',
+      roomSelected: { name: 'All', value: '' },
       userInfo: null,
       token: null,
       tokenExpire: null,
