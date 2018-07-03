@@ -20,7 +20,13 @@
           <div>
             <h3 class="title mb-0">
               {{ registrar.fullname }}
-              <v-icon :color="registrar.gender == 'male' ? 'info' : 'pink'">{{ iconGender(registrar.gender) }}</v-icon>
+               <v-avatar
+              tile
+              size="38px"
+              color="grey"
+              class="mx-3">
+              <img :src="getRoomImageUrl(registrar.roomFirst)" alt="">
+            </v-avatar>
             </h3>
             <div class="subitle">{{ registrar.institution }}</div>
             <v-btn v-if="registrar.socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.socmed.instagram" target="_blank">
@@ -29,17 +35,11 @@
             <v-btn v-if="registrar.socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.socmed.line" target="_blank">
               <v-icon>fab fa-line</v-icon>
             </v-btn>
-            <v-avatar
-              tile
-              size="38px"
-              color="grey"
-              class="mx-3">
-              <img :src="getRoomImageUrl(registrar.roomFirst)" alt="">
-            </v-avatar>
           </div>
         </v-card-title>
         <v-card-text>
           <p style="text-transform: capitalize;">
+            <v-icon :color="registrar.gender == 'male' ? 'info' : 'pink'">{{ iconGender(registrar.gender) }}</v-icon>
             {{ registrar.dateOfBirth | moment('from', 'now', true) }} ,
             Domisili {{ registrar.city.toLowerCase() }}
           </p>
