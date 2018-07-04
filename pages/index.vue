@@ -15,7 +15,7 @@
             <h1 class="display-1 ml-4">{{ registrarSelected }} / {{ totalRegistrar }}</h1>
           </v-card-title>
           <v-card-text>
-            <p>Prendaftar</p>
+            <p>Prendaftar dinilai</p>
             <v-progress-linear v-model="percentScoredRegistrar"></v-progress-linear>
           </v-card-text>
         </v-card>
@@ -55,7 +55,7 @@ export default {
       this.loading = true
       this.$axios.$get('/registrars/count', {
         params: {
-          where: { scoreEssay: { gt: 5 } }
+          where: { scoreEssay: { gt: 0 } }
         }
       }).then(response => {
         this.registrarSelected = response.count
