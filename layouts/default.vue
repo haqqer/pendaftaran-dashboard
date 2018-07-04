@@ -53,7 +53,7 @@
         @click.stop="miniVariant = !miniVariant">
         <v-icon>menu</v-icon>
       </v-btn>
-      <v-text-field
+      <!-- <v-text-field
           @focus="onSearchFocus()"
           class="mt-2"
           placeholder="Pencarian"
@@ -61,7 +61,7 @@
           flat
           clearable
           append-icon="search"
-          ></v-text-field>
+          ></v-text-field> -->
       <v-spacer></v-spacer>
       <popover-menu-user></popover-menu-user>
     </v-toolbar>
@@ -97,7 +97,7 @@ export default {
       userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
         { icon: 'assignment', title: 'Penilaian', to: '/essay' },
-        { icon: 'table_chart', title: 'Seleksi', to: '/pendaftar' },
+        { icon: 'table_chart', title: 'Data Pendaftar', to: '/pendaftar' },
         // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],
       adminItems: [
