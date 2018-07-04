@@ -65,10 +65,18 @@
         <template slot="expand" slot-scope="props">
           <v-card color="cloud">
             <v-card-text>
-              <p>
-                mendaftar pada : {{ props.item.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
-              </p>
-              <v-btn color="info" :to="'/essay/' + props.item.id">Ke Penilaian</v-btn>
+              <template v-if="props.item.scoredBy">
+                dinilai oleh :
+                <v-chip color="info" outline>
+                  {{ props.item.scoredBy.username }}
+                </v-chip>
+              </template>
+              <template v-else>
+                <p>
+                  mendaftar pada : {{ props.item.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
+                </p>
+                <v-btn color="info" :to="'/essay/' + props.item.id">Ke Penilaian</v-btn>
+              </template>
             </v-card-text>
           </v-card>
         </template>
@@ -128,6 +136,7 @@ export default {
       this.$axios.$get('/registrars', {
         params: {
           filter: {
+            include: 'scoredBy',
             where: {
               and: [
                 { roomFirst: { like: this.filter.room } },

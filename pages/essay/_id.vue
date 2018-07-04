@@ -105,6 +105,7 @@ export default {
 
       let registrar = {...this.registrar}
       registrar.scoreEssay = this.score
+      registrar.scoredById = this.userInfo.id
       delete registrar['id']
 
       this.$axios({

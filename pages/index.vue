@@ -15,7 +15,7 @@
             <h1 class="display-1 ml-4">{{ registrarSelected }} / {{ totalRegistrar }}</h1>
           </v-card-title>
           <v-card-text>
-            <p>Prendaftar dinilai</p>
+            <p>Pendaftar dinilai</p>
             <v-progress-linear v-model="percentScoredRegistrar"></v-progress-linear>
           </v-card-text>
         </v-card>
