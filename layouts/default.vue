@@ -98,10 +98,10 @@ export default {
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
         { icon: 'assignment', title: 'Penilaian', to: '/essay' },
         { icon: 'table_chart', title: 'Data Pendaftar', to: '/pendaftar' },
-        { icon: 'mail', title: 'Pengiriman email', to: '/email-schedule' },
         // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],
       adminItems: [
+        { icon: 'mail', title: 'Pengiriman email', to: '/email-schedule' },
         { icon: 'person', title: 'User', to: '/users' }
       ],
       miniVariant: false,
