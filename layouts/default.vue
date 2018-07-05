@@ -96,7 +96,6 @@ export default {
       drawer: true,
       userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
-        { icon: 'assignment', title: 'Penilaian', to: '/essay' },
         { icon: 'table_chart', title: 'Data Pendaftar', to: '/pendaftar' },
         // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],

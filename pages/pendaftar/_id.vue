@@ -114,7 +114,7 @@ export default {
         data: registrar
       }).then(response => {
         this.notify({ type: 'success', message: 'Berhasil nilai  ' + this.registrar.fullname + ' ' + this.score })
-        this.$router.push('/essay')
+        this.$router.push('/pendaftar')
         // this.getDataRegistrar()
         this.loading = false
         this.dialog = false

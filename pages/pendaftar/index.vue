@@ -41,7 +41,7 @@
         class="elevation-1"
         :loading="loadingRegistrar"
         :headers="headers"
-        disable-initial-sort
+        :pagination.sync="pagination"
       >
         <v-progress-linear slot="progress" color="info" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
@@ -50,15 +50,12 @@
             <td>{{ props.item.fullname }}</td>
             <td class="text-xs-left">{{ props.item.roomFirst }}</td>
             <td class="text-xs-left">{{ props.item.email }}</td>
-            <td class="text-xs-left">{{ props.item.scoreAuto.achievement }}</td>
-            <td class="text-xs-left">{{ props.item.scoreAuto.organization }}</td>
-            <td class="text-xs-left">{{ props.item.scoreAuto.socialActivity }}</td>
-            <td class="text-xs-left">
-              <strong>{{ props.item.scoreAuto.total }}</strong>
-            </td>
-            <td class="text-xs-left">{{ props.item.scoreEssay }}</td>
             <td class="text-xs-left">
               <strong>{{ props.item.scoreTotal }}</strong>
+            </td>
+            <td class="text-xs-left">
+              <v-icon v-if="props.item.scoredBy" color="success">check_circle</v-icon>
+              <span v-else>-</span>
             </td>
           </tr>
         </template>
@@ -70,12 +67,16 @@
                 <v-chip color="info" outline>
                   {{ props.item.scoredBy.username }}
                 </v-chip>
+                <v-btn outline round color="success" :to="'' + props.item.id" append>
+                  <v-icon left="">edit</v-icon>
+                  Edit
+                </v-btn>
               </template>
               <template v-else>
                 <p>
                   mendaftar pada : {{ props.item.createdAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}
                 </p>
-                <v-btn color="info" :to="'/essay/' + props.item.id">Ke Penilaian</v-btn>
+                <v-btn color="info" :to="'' + props.item.id" append>Ke Penilaian</v-btn>
               </template>
             </v-card-text>
           </v-card>
@@ -99,12 +100,8 @@ export default {
         { text: 'Nama', value: 'fullname' },
         { text: 'Room', value: 'roomFirst' },
         { text: 'Email', value: 'email' },
-        { text: 'Prestasi', value: 'scoreAuto.achievement' },
-        { text: 'Organisasi', value: 'scoreAuto.organization' },
-        { text: 'Sosial', value: 'scoreAuto.socialActivity' },
-        { text: 'Jumlah', value: 'scoreAuto.total' },
-        { text: 'Essay', value: 'scoreEssay' },
         { text: 'Jumlah Semua', value: 'scoreTotal' },
+        { text: 'Dinilai', value: 'scored' },
       ],
       roomLists: [
         { text: 'All', value: '' },
@@ -118,6 +115,7 @@ export default {
       filter: {
         room: ''
       },
+      pagination: {},
       searchRegistrar: '',
       registrarItems: [],
       loadingRegistrar: false,
@@ -176,6 +174,8 @@ export default {
   },
   created () {
     this.fetchDataRegistrars()
+    this.pagination.sortBy = 'scoreTotal'
+    this.pagination.descending = true
   },
   components: {
     Logo,
