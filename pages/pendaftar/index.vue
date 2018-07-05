@@ -17,7 +17,7 @@
         <div class="subheading mr-1">Room: </div>
         <v-select
           class="mt-2"
-          v-model="filter.room"
+          v-model="filterRoom"
           :items="roomLists"
           item-text="text"
           item-value="value"
@@ -90,6 +90,8 @@
 </template>
 
 <script>
+import { mapState} from 'vuex'
+
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
@@ -112,9 +114,6 @@ export default {
         { text: 'Entrepreneurship', value: 'Entrepreneurship' },
         { text: 'Poverty', value: 'Poverty' },
       ],
-      filter: {
-        room: ''
-      },
       pagination: {},
       searchRegistrar: '',
       registrarItems: [],
@@ -122,8 +121,14 @@ export default {
       scored: false
     }
   },
+  computed: {
+    filterRoom: {
+      get () { return this.$store.state.roomSelected },
+      set (val) { this.$store.dispatch('setRoomSelected', val) }
+    }
+  },
   watch: {
-    filter: {
+    filterRoom: {
       handler (val) { this.fetchDataRegistrars() },
       deep: true
     }
@@ -137,7 +142,7 @@ export default {
             include: 'scoredBy',
             where: {
               and: [
-                { roomFirst: { like: this.filter.room } },
+                { roomFirst: { like: this.filterRoom } },
                 { fullname: { like: (this.searchRegistrar || '') + '.*', options: 'i' } },
               ]
             }
