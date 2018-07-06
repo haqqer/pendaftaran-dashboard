@@ -55,8 +55,26 @@
         <template slot="items" slot-scope="props">
           <!-- <td></td> -->
           <tr @click="props.expanded = !props.expanded" class="cursor-pointer">
-            <td>{{ props.item.fullname }}</td>
-            <td class="text-xs-left">{{ props.item.roomFirst }}</td>
+            <td>
+              <v-avatar
+                size="48px"
+                color="grey"
+                class="mr-2 my-1">
+                <img :src="'https://img.devidentify.com/' + props.item.email" alt="">
+              </v-avatar>
+              <v-icon :color="props.item.gender == 'male' ? 'info' : 'pink'">{{ iconGender(props.item.gender) }}</v-icon>
+              {{ props.item.fullname }}
+            </td>
+            <td class="text-xs-left">
+              <v-avatar
+                tile
+                size="38px"
+                color="grey"
+                class="mx-3">
+                <img :src="getRoomImageUrl(props.item.roomFirst)" alt="">
+              </v-avatar>
+            </td>
+            <!-- <td class="text-xs-left">{{ props.item.roomFirst }}</td> -->
             <td class="text-xs-left">{{ props.item.email }}</td>
             <td class="text-xs-left">{{ props.item.scoreEssay }}</td>
             <td class="text-xs-left">
@@ -316,6 +334,34 @@ export default {
         this.notify({ type: 'error', message: error.message })
         this.loadingBtnRemoveList = false
       })
+    },
+    iconGender (gender) {
+      switch (gender) {
+        case 'male':
+          return 'fas fa-mars'
+        case 'female':
+          return 'fas fa-venus'
+        default:
+          return 'fas fa-genderless'
+      }
+    },
+    getRoomImageUrl (room) {
+      switch (room) {
+        case 'Education':
+          return 'https://user-images.githubusercontent.com/21119252/41973205-85ec42bc-7a3e-11e8-9a29-e3f296080e21.png'
+        case 'Digital':
+          return 'https://user-images.githubusercontent.com/21119252/41973182-71436b92-7a3e-11e8-9d7e-8f039c0e67e3.png'
+        case 'Poverty':
+          return 'https://user-images.githubusercontent.com/21119252/41973269-aa219768-7a3e-11e8-8e77-6023aef4d135.png'
+        case 'Human Capital':
+          return 'https://user-images.githubusercontent.com/21119252/41973250-a087b4e4-7a3e-11e8-845b-ec4c8c38d34f.png'
+        case 'Entrepreneurship':
+          return 'https://user-images.githubusercontent.com/21119252/41973233-91527996-7a3e-11e8-9b1c-34e2b8ee0118.png'
+        case 'Urban Planning':
+          return 'https://user-images.githubusercontent.com/21119252/41973340-e2cc96bc-7a3e-11e8-8a25-a079c0b6e279.png'
+        default:
+          return 'https://user-images.githubusercontent.com/21119252/41821836-c2787e10-7810-11e8-8d2a-cc829bea4ae3.png'
+      }
     }
   },
   mounted () {
