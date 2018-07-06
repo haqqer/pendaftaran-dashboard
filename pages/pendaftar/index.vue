@@ -54,21 +54,31 @@
           <v-card color="cloud">
             <v-card-text>
               <template v-if="props.item.scoredBy">
-                dinilai oleh :
-                <v-chip color="info" outline>
-                  {{ props.item.scoredBy.username }}
+                <v-chip v-if="props.item.acceptanceStatus == 1" label color="info" outline>
+                  <span class="mr-1">status: </span> <strong> Waiting List</strong>
                 </v-chip>
-                <v-btn outline round color="success" :to="'' + props.item.id" append>
+                <v-chip v-if="props.item.acceptanceStatus == 2" label color="info" outline>
+                  <span class="mr-1">status: </span> <strong> Diterima Delegates</strong>
+                </v-chip>
+                <v-chip label color="info" outline>
+                  <span class="mr-1">dinilai oleh: </span> <strong> {{ props.item.scoredBy.username }}</strong>
+                </v-chip>
+                <v-btn outline color="success" :to="'' + props.item.id" append>
                   <v-icon left="">edit</v-icon>
-                  Edit
+                  Edit Nilai
                 </v-btn>
-                <v-btn outline round color="success">
+                <br>
+                <v-btn v-if="props.item.acceptanceStatus != 1" outline round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
                   <v-icon left="">add_to_queue</v-icon>
-                  Jadikan Waiting List
+                  Masukkan Waiting List
                 </v-btn>
-                <v-btn outline round color="success">
+                <v-btn v-if="props.item.acceptanceStatus != 2" outline round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
                   <v-icon left="">check</v-icon>
                   Terima Jadi Delegates
+                </v-btn>
+                <v-btn v-if="props.item.acceptanceStatus == 1 || props.item.acceptanceStatus == 2" outline round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
+                  <v-icon left="">close</v-icon>
+                  Keluarkan
                 </v-btn>
               </template>
               <template v-else>
@@ -89,7 +99,7 @@
 </template>
 
 <script>
-import { mapState} from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
@@ -115,6 +125,9 @@ export default {
       searchRegistrar: '',
       registrarItems: [],
       loadingRegistrar: false,
+      loadingBtnWaiting: false,
+      loadingBtnDelegates: false,
+      loadingBtnRemoveList: false,
       scored: false,
       tabs: 0
     }
@@ -135,6 +148,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['notify']),
     fetchDataRegistrars () {
       this.loadingRegistrar = true
       let scoreEssay = { scoreEssay: { lt: 1 } }
@@ -183,6 +197,66 @@ export default {
         }
         console.log('--- error konfig ----')
         console.log(error.config);
+      })
+    },
+    addToWaitingList (data) {
+      this.loadingBtnWaiting = true
+
+      let registrar = {...data}
+      registrar.acceptanceStatus = 1
+      delete registrar['id']
+
+      this.$axios({
+        method: 'PUT',
+        url: '/Registrars/' + data.id,
+        data: registrar
+      }).then(response => {
+        this.notify({ type: 'success', message: response.data.fullname + ' ditambahkan ke waiting list' })
+        this.fetchDataRegistrars()
+        this.loadingBtnWaiting = false
+      }).catch(error => {
+        this.notify({ type: 'error', message: error.message })
+        this.loadingBtnWaiting = false
+      })
+    },
+    addToDelegates (data) {
+      this.loadingBtnDelegates = true
+
+      let registrar = {...data}
+      registrar.acceptanceStatus = 2
+      delete registrar['id']
+
+      this.$axios({
+        method: 'PUT',
+        url: '/Registrars/' + data.id,
+        data: registrar
+      }).then(response => {
+        this.notify({ type: 'success', message: response.data.fullname + ' diterima jadi Delegates' })
+        this.fetchDataRegistrars()
+        this.loadingBtnDelegates = false
+      }).catch(error => {
+        this.notify({ type: 'error', message: error.message })
+        this.loadingBtnDelegates = false
+      })
+    },
+    removeFromList (data) {
+      this.loadingBtnRemoveList = true
+
+      let registrar = {...data}
+      registrar.acceptanceStatus = 0
+      delete registrar['id']
+
+      this.$axios({
+        method: 'PUT',
+        url: '/Registrars/' + data.id,
+        data: registrar
+      }).then(response => {
+        this.notify({ type: 'success', message: response.data.fullname + ' dikeluarkan dari list' })
+        this.fetchDataRegistrars()
+        this.loadingBtnRemoveList = false
+      }).catch(error => {
+        this.notify({ type: 'error', message: error.message })
+        this.loadingBtnRemoveList = false
       })
     }
   },
