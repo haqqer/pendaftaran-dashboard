@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="headline pb-0">
-      Pendaftar : {{ totalRegistrar }}
+      Pendaftar
     </v-card-title>
     <v-card-text>
       <v-toolbar flat dark tabs color="primary">
@@ -25,6 +25,22 @@
             <v-icon>chevron_right</v-icon>
           </v-btn>
         </template>
+        <v-divider vertical class="mr-1"></v-divider>
+        <v-menu bottom left>
+            <v-btn
+              slot="activator"
+              dark
+              icon
+            >
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+
+            <v-list>
+              <v-list-tile>
+                <v-list-tile-title>menu</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
         <v-tabs
           slot="extension"
           v-model="tabs"
