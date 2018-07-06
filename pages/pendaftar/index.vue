@@ -15,14 +15,16 @@
           solo-inverted
         ></v-select>
         <v-divider vertical class="mx-4"></v-divider>
-        <span>{{ skip + 1 }} - {{ pagination.page == pages ? totalRegistrar : skip + pagination.rowsPerPage }}</span>
-        <v-btn @click="pagination.page -= 1" :disabled="pagination.page < 2" icon flat dark>
-          <v-icon>chevron_left</v-icon>
-        </v-btn>
-        <v-btn @click="pagination.page += 1" :disabled="pagination.page == pages" icon flat dark>
-          <v-icon>chevron_right</v-icon>
-        </v-btn>
-        <!-- <v-pagination v-model="pagination.page" :length="pages" :total-visible="1"></v-pagination> -->
+        <span v-if="totalRegistrar < 1">-</span>
+        <template v-else>
+          <span>{{ skip + 1 }} - {{ pagination.page == pages ? totalRegistrar : skip + pagination.rowsPerPage }} dari {{ totalRegistrar }}</span>
+          <v-btn @click="pagination.page -= 1" :disabled="pagination.page < 2" icon flat dark>
+            <v-icon>chevron_left</v-icon>
+          </v-btn>
+          <v-btn @click="pagination.page += 1" :disabled="pagination.page == pages" icon flat dark>
+            <v-icon>chevron_right</v-icon>
+          </v-btn>
+        </template>
         <v-tabs
           slot="extension"
           v-model="tabs"
@@ -41,6 +43,8 @@
         class="elevation-1"
         :loading="loadingRegistrar"
         :headers="headers"
+        :total-items="totalRegistrar"
+        :rows-per-page-items="[50]"
         :pagination.sync="pagination">
         <v-progress-linear slot="progress" color="info" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
@@ -155,6 +159,10 @@ export default {
     },
     skip () {
       return (this.pagination.page - 1) * this.pagination.rowsPerPage
+    },
+    orderBy () {
+      if (!this.pagination.sortBy) return ''
+      return this.pagination.sortBy + (this.pagination.descending ? ' DESC' : ' ASC')
     }
   },
   watch: {
@@ -164,7 +172,13 @@ export default {
     },
     tabs () {
       this.fetchDataRegistrars()
-    }
+    },
+    pagination: {
+      handler () {
+        this.fetchDataRegistrars()
+      },
+      deep: true
+    },
   },
   methods: {
     ...mapActions(['notify']),
@@ -189,6 +203,9 @@ export default {
         params: {
           filter: {
             include: 'scoredBy',
+            order: this.orderBy,
+            skip: this.skip,
+            limit: this.pagination.rowsPerPage,
             where: filterWhere
           }
         }
@@ -296,8 +313,8 @@ export default {
       })
     }
   },
-  created () {
-    this.fetchDataRegistrars()
+  mounted () {
+    // this.fetchDataRegistrars()
     this.pagination.sortBy = 'scoreTotal'
     this.pagination.descending = true
   }
