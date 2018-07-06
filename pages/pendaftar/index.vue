@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="headline pb-0">
-      Pendaftar
+      Pendaftar : {{ totalRegistrar }}
     </v-card-title>
     <v-card-text>
       <v-toolbar flat dark tabs color="primary">
@@ -14,6 +14,15 @@
           label="Solo field"
           solo-inverted
         ></v-select>
+        <v-divider vertical class="mx-4"></v-divider>
+        <span>{{ skip + 1 }} - {{ pagination.page == pages ? totalRegistrar : skip + pagination.rowsPerPage }}</span>
+        <v-btn @click="pagination.page -= 1" :disabled="pagination.page < 2" icon flat dark>
+          <v-icon>chevron_left</v-icon>
+        </v-btn>
+        <v-btn @click="pagination.page += 1" :disabled="pagination.page == pages" icon flat dark>
+          <v-icon>chevron_right</v-icon>
+        </v-btn>
+        <!-- <v-pagination v-model="pagination.page" :length="pages" :total-visible="1"></v-pagination> -->
         <v-tabs
           slot="extension"
           v-model="tabs"
@@ -124,6 +133,7 @@ export default {
       pagination: {},
       searchRegistrar: '',
       registrarItems: [],
+      totalRegistrar: 0,
       loadingRegistrar: false,
       loadingBtnWaiting: false,
       loadingBtnDelegates: false,
@@ -136,6 +146,15 @@ export default {
     filterRoom: {
       get () { return this.$store.state.roomSelected },
       set (val) { this.$store.dispatch('setRoomSelected', val) }
+    },
+    pages () {
+      if (this.pagination.rowsPerPage == null ||
+        this.pagination.totalItems == null
+      ) return 0
+      return Math.ceil(this.totalRegistrar / this.pagination.rowsPerPage)
+    },
+    skip () {
+      return (this.pagination.page - 1) * this.pagination.rowsPerPage
     }
   },
   watch: {
@@ -157,24 +176,27 @@ export default {
       let acceptanceStatus = { acceptanceStatus: this.tabs }
       if (this.tabs > 2) acceptanceStatus = {}
 
+      let filterWhere = {
+        and: [
+          scoreEssay,
+          acceptanceStatus,
+          { roomFirst: { like: this.filterRoom } },
+          { fullname: { like: (this.searchRegistrar || '') + '.*', options: 'i' } },
+        ]
+      }
+
       this.$axios.$get('/registrars', {
         params: {
           filter: {
             include: 'scoredBy',
-            where: {
-              and: [
-                scoreEssay,
-                acceptanceStatus,
-                { roomFirst: { like: this.filterRoom } },
-                { fullname: { like: (this.searchRegistrar || '') + '.*', options: 'i' } },
-              ]
-            }
+            where: filterWhere
           }
         }
       }).then(response => {
         this.registrarItems = response
-        console.log('registrar ', response)
         this.loadingRegistrar = false
+        this.getTotalRegistrars(filterWhere)
+        console.log('registrar ', response)
       }).catch(error => {
         console.log('--- awh error ----')
         if (error.response) {
@@ -197,6 +219,20 @@ export default {
         }
         console.log('--- error konfig ----')
         console.log(error.config);
+      })
+    },
+    getTotalRegistrars (filter) {
+      this.loadingRegistrar = true
+      this.$axios.$get('/registrars/count', {
+        params: {
+          where: filter
+        }
+      }).then(response => {
+        this.totalRegistrar = response.count
+        this.loadingRegistrar = false
+      }).catch(error => {
+        this.loadingRegistrar = false
+        this.notify({ type: 'error', message: error.message })
       })
     },
     addToWaitingList (data) {
