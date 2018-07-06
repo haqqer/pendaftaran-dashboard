@@ -54,14 +54,15 @@
         <v-icon>menu</v-icon>
       </v-btn>
       <v-text-field
-          @focus="onSearchFocus()"
-          class="mt-2"
-          placeholder="Pencarian"
-          solo-inverted
-          flat
-          clearable
-          append-icon="search"
-          ></v-text-field>
+        class="mt-2"
+        @keypress.enter="$router.push('/pendaftar')"
+        placeholder="Pencarian"
+        solo-inverted
+        flat
+        clearable
+        v-model="search"
+        append-icon="search"
+        ></v-text-field>
       <v-spacer></v-spacer>
       <popover-menu-user></popover-menu-user>
     </v-toolbar>
@@ -122,15 +123,16 @@ export default {
         return [ ...this.userItems, ...this.adminItems ]
       }
       return this.userItems
-    }
+    },
+    search: {
+      get () { return this.$store.state.searchField },
+      set (val) { this.$store.dispatch('setSearchField', val) }
+    },
   },
   methods: {
     ...mapActions(['notify']),
     notificationToggle() {
       this.notify({ type: 'error', message: '' });
-    },
-    onSearchFocus () {
-      this.inputSearchClass = 'elevation-3'
     }
   },
   mounted () {

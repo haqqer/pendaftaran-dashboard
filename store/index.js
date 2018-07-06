@@ -8,6 +8,7 @@ const createStore = () => {
         appLogo: '/images/fls-logo-mini.png'
       },
       roomSelected: '',
+      searchField: '',
       userInfo: null,
       token: null,
       tokenExpire: null,
@@ -27,7 +28,8 @@ const createStore = () => {
       SET_TOKEN_EXP (state, data) { state.tokenExpire = data },
       CLEAR_TOKEN (state) { state.token = null },
       SET_USER_INFO (state, data) { state.userInfo = data },
-      SET_ROOM_SELECTED (state, data) { state.roomSelected = data }
+      SET_ROOM_SELECTED (state, data) { state.roomSelected = data },
+      SET_SEARCH_FIELD (state, data) { state.searchField = data }
     },
     actions: {
       initApp (vuexCtx) {
@@ -68,6 +70,9 @@ const createStore = () => {
       },
       setRoomSelected (vuexCtx, payload) {
         vuexCtx.commit('SET_ROOM_SELECTED', payload)
+      },
+      setSearchField (vuexCtx, payload) {
+        vuexCtx.commit('SET_SEARCH_FIELD',  payload)
       }
     },
     getters: {

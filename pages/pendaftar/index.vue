@@ -136,6 +136,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import _debounce from 'lodash/debounce'
 
 export default {
   data () {
@@ -158,7 +159,6 @@ export default {
         { text: 'Poverty', value: 'Poverty' },
       ],
       pagination: {},
-      searchRegistrar: '',
       registrarItems: [],
       totalRegistrar: 0,
       loadingRegistrar: false,
@@ -173,6 +173,9 @@ export default {
     filterRoom: {
       get () { return this.$store.state.roomSelected },
       set (val) { this.$store.dispatch('setRoomSelected', val) }
+    },
+    search () {
+      return this.$store.state.searchField
     },
     pages () {
       if (this.pagination.rowsPerPage == null ||
@@ -193,6 +196,9 @@ export default {
       handler (val) { this.fetchDataRegistrars() },
       deep: true
     },
+    search: _debounce(function() {
+      this.fetchDataRegistrars()
+    }, 700),
     tabs () {
       this.fetchDataRegistrars()
     },
@@ -218,7 +224,10 @@ export default {
           scoreEssay,
           acceptanceStatus,
           { roomFirst: { like: this.filterRoom } },
-          { fullname: { like: (this.searchRegistrar || '') + '.*', options: 'i' } },
+          { or: [
+            { fullname: { like: (this.search || '') + '.*', options: 'i' } },
+            { email: { like: (this.search || '') + '.*', options: 'i' } }
+          ]}
         ]
       }
 
