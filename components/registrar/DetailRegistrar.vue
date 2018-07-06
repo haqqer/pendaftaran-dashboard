@@ -36,6 +36,7 @@
         dark
         class="mb-4"
         icons-and-text
+        show-arrows
         color="primary"
         slider-color="white">
         <v-tab

@@ -4,18 +4,8 @@
       Pendaftar
     </v-card-title>
     <v-card-text>
-      <v-toolbar flat dark color="primary">
-        <!-- <v-btn-toggle dark v-model="scored">
-          <v-btn flat value="true">
-            Left
-          </v-btn>
-          <v-btn flat value="false">
-            Center
-          </v-btn>
-        </v-btn-toggle>
-        <v-divider vertical class="mx-4"></v-divider> -->
-        <div class="subheading mr-1">Room: </div>
-        <v-select
+      <v-toolbar flat dark tabs color="primary">
+       <v-select
           class="mt-2"
           v-model="filterRoom"
           :items="roomLists"
@@ -24,25 +14,25 @@
           label="Solo field"
           solo-inverted
         ></v-select>
-        <v-divider vertical class="mx-4"></v-divider>
-        <v-text-field
-          class="mt-2"
-          placeholder="Pencarian"
-          v-model="searchRegistrar"
-          @keypress.enter="fetchDataRegistrars()"
-          solo-inverted
-          flat
-          clearable
-          append-icon="search"
-          ></v-text-field>
+        <v-tabs
+          slot="extension"
+          v-model="tabs"
+          show-arrows
+          color="transparent"
+          slider-color="white">
+          <v-tab
+            v-for="menu in ['Belum dinilai', 'Waiting List', 'Diterima', 'Semua']"
+            :key="menu">
+            {{ menu }}
+          </v-tab>
+        </v-tabs>
       </v-toolbar>
       <v-data-table
         :items="registrarItems"
         class="elevation-1"
         :loading="loadingRegistrar"
         :headers="headers"
-        :pagination.sync="pagination"
-      >
+        :pagination.sync="pagination">
         <v-progress-linear slot="progress" color="info" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <!-- <td></td> -->
@@ -50,6 +40,7 @@
             <td>{{ props.item.fullname }}</td>
             <td class="text-xs-left">{{ props.item.roomFirst }}</td>
             <td class="text-xs-left">{{ props.item.email }}</td>
+            <td class="text-xs-left">{{ props.item.scoreEssay }}</td>
             <td class="text-xs-left">
               <strong>{{ props.item.scoreTotal }}</strong>
             </td>
@@ -70,6 +61,14 @@
                 <v-btn outline round color="success" :to="'' + props.item.id" append>
                   <v-icon left="">edit</v-icon>
                   Edit
+                </v-btn>
+                <v-btn outline round color="success">
+                  <v-icon left="">add_to_queue</v-icon>
+                  Jadikan Waiting List
+                </v-btn>
+                <v-btn outline round color="success">
+                  <v-icon left="">check</v-icon>
+                  Terima Jadi Delegates
                 </v-btn>
               </template>
               <template v-else>
@@ -92,9 +91,6 @@
 <script>
 import { mapState} from 'vuex'
 
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
   data () {
     return {
@@ -102,11 +98,12 @@ export default {
         { text: 'Nama', value: 'fullname' },
         { text: 'Room', value: 'roomFirst' },
         { text: 'Email', value: 'email' },
-        { text: 'Jumlah Semua', value: 'scoreTotal' },
+        { text: 'Essay', value: 'scoreEssay' },
+        { text: 'Nilai Total', value: 'scoreTotal' },
         { text: 'Dinilai', value: 'scored' },
       ],
       roomLists: [
-        { text: 'All', value: '' },
+        { text: 'All Room', value: '' },
         { text: 'Human Capital', value: 'Human Capital' },
         { text: 'Education', value: 'Education' },
         { text: 'Digital', value: 'Digital' },
@@ -118,7 +115,8 @@ export default {
       searchRegistrar: '',
       registrarItems: [],
       loadingRegistrar: false,
-      scored: false
+      scored: false,
+      tabs: 0
     }
   },
   computed: {
@@ -131,17 +129,28 @@ export default {
     filterRoom: {
       handler (val) { this.fetchDataRegistrars() },
       deep: true
+    },
+    tabs () {
+      this.fetchDataRegistrars()
     }
   },
   methods: {
     fetchDataRegistrars () {
       this.loadingRegistrar = true
+      let scoreEssay = { scoreEssay: { lt: 1 } }
+      if (this.tabs > 0) scoreEssay = {}
+
+      let acceptanceStatus = { acceptanceStatus: this.tabs }
+      if (this.tabs > 2) acceptanceStatus = {}
+
       this.$axios.$get('/registrars', {
         params: {
           filter: {
             include: 'scoredBy',
             where: {
               and: [
+                scoreEssay,
+                acceptanceStatus,
                 { roomFirst: { like: this.filterRoom } },
                 { fullname: { like: (this.searchRegistrar || '') + '.*', options: 'i' } },
               ]
@@ -181,10 +190,6 @@ export default {
     this.fetchDataRegistrars()
     this.pagination.sortBy = 'scoreTotal'
     this.pagination.descending = true
-  },
-  components: {
-    Logo,
-    VuetifyLogo
   }
 }
 </script>

@@ -53,7 +53,7 @@
         @click.stop="miniVariant = !miniVariant">
         <v-icon>menu</v-icon>
       </v-btn>
-      <!-- <v-text-field
+      <v-text-field
           @focus="onSearchFocus()"
           class="mt-2"
           placeholder="Pencarian"
@@ -61,7 +61,7 @@
           flat
           clearable
           append-icon="search"
-          ></v-text-field> -->
+          ></v-text-field>
       <v-spacer></v-spacer>
       <popover-menu-user></popover-menu-user>
     </v-toolbar>
