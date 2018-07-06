@@ -14,33 +14,22 @@
           label="Solo field"
           solo-inverted
         ></v-select>
-        <v-divider vertical class="mx-4"></v-divider>
-        <span v-if="totalRegistrar < 1">-</span>
-        <template v-else>
-          <span>{{ skip + 1 }} - {{ pagination.page == pages ? totalRegistrar : skip + pagination.rowsPerPage }} dari {{ totalRegistrar }}</span>
-          <v-btn @click="pagination.page -= 1" :disabled="pagination.page < 2" icon flat dark>
-            <v-icon>chevron_left</v-icon>
-          </v-btn>
-          <v-btn @click="pagination.page += 1" :disabled="pagination.page == pages" icon flat dark>
-            <v-icon>chevron_right</v-icon>
-          </v-btn>
-        </template>
-        <v-divider vertical class="mr-1"></v-divider>
+        <v-divider vertical class="ml-4"></v-divider>
         <v-menu bottom left>
-            <v-btn
-              slot="activator"
-              dark
-              icon
-            >
-              <v-icon>more_vert</v-icon>
-            </v-btn>
+          <v-btn
+            slot="activator"
+            dark
+            icon
+          >
+            <v-icon>more_vert</v-icon>
+          </v-btn>
 
-            <v-list>
-              <v-list-tile>
-                <v-list-tile-title>menu</v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
+          <v-list>
+            <v-list-tile>
+              <v-list-tile-title>Download</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
         <v-tabs
           slot="extension"
           v-model="tabs"
