@@ -68,15 +68,15 @@
                   Edit Nilai
                 </v-btn>
                 <br>
-                <v-btn v-if="props.item.acceptanceStatus != 1" outline round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
+                <v-btn v-if="props.item.acceptanceStatus != 1"  round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
                   <v-icon left="">add_to_queue</v-icon>
                   Masukkan Waiting List
                 </v-btn>
-                <v-btn v-if="props.item.acceptanceStatus != 2" outline round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
+                <v-btn v-if="props.item.acceptanceStatus != 2"  round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
                   <v-icon left="">check</v-icon>
                   Terima Jadi Delegates
                 </v-btn>
-                <v-btn v-if="props.item.acceptanceStatus == 1 || props.item.acceptanceStatus == 2" outline round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
+                <v-btn v-if="props.item.acceptanceStatus == 1 || props.item.acceptanceStatus == 2"  round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
                   <v-icon left="">close</v-icon>
                   Keluarkan
                 </v-btn>
