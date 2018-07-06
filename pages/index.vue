@@ -25,7 +25,11 @@
     <v-layout class="mt-4">
       <v-flex md12>
         <v-card>
-          <v-card-title>Pendaftar Room</v-card-title>
+          <v-card-title>
+            <p class="subheading">Pendaftar Total : <strong>{{ totalRegistrar }}</strong></p>
+            <v-spacer></v-spacer>
+            <p>{{ new Date() | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}</p>
+          </v-card-title>
           <v-card-text>
             <pie-chart :data="chartRoom" :download="true" :library="{plugins: { datalabels: {color: '#ffff'}}}"></pie-chart>
           </v-card-text>
