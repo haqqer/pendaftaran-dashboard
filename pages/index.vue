@@ -27,7 +27,7 @@
         <v-card>
           <v-card-title>Pendaftar Room</v-card-title>
           <v-card-text>
-            <pie-chart :data="chartRoom" :download="true"></pie-chart>
+            <pie-chart :data="chartRoom" :download="true" :library="{plugins: { datalabels: {color: '#ffff'}}}"></pie-chart>
           </v-card-text>
         </v-card>
       </v-flex>
