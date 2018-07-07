@@ -98,6 +98,7 @@ export default {
       userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
         { icon: 'table_chart', title: 'Data Pendaftar', to: '/pendaftar' },
+        { icon: 'comment', title: 'Umpan Balik', to: '/umpan-balik' },
         // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],
       adminItems: [
