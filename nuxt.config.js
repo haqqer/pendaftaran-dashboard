@@ -63,6 +63,10 @@ module.exports = {
     baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'http://128.199.72.101:3000/api'
   },
 
+  generate: {
+    fallback: true,
+  },
+
   /*
   ** Build configuration
   */
