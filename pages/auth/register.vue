@@ -32,6 +32,9 @@
                         label="Username"
                         id="username"
                         v-model="username"
+                        data-vv-name="username"
+                        :error-messages="errors.collect('username')"
+                        v-validate="'required|alpha_num'"
                         required></v-text-field>
                     </v-flex>
                   </v-layout>
