@@ -1,7 +1,7 @@
 <template>
   <v-layout>
     <v-flex>
-      <v-btn @click="sendFailedEmail()" color="error" :loading="loadingSend">Kirim Ulang Semua</v-btn>
+      <v-btn @click="sendAllFailedEmail()" color="error" :loading="loadingSend">Kirim Ulang Semua</v-btn>
       <v-card>
         <v-card-title>
           <h4 class="title">Gagal: {{ listAgenda.length }}</h4>
@@ -61,21 +61,24 @@ export default {
     ...mapActions(['notify']),
     getListAgenda () {
       this.loading = true
-      this.$axios.$get('/agendaJobs', {
+      this.$axios.$get('http://pinguin.dinus.ac.id:3000/dash/h3s0y4m/api', {
         params: {
-          filter: {
-            where: { failCount: { neq: null } }
-          }
+          state: 'failed'
         }
       }).then(response => {
-        this.listAgenda = response
+        this.listAgenda = response.jobs.map(item => {
+          item.job.id = item.job._id
+          return item.job
+        })
         console.log('total ', response)
         this.loading = false
       }).catch(error => {
         this.notify({ type: 'error', message: error.message })
       })
     },
-    sendFailedEmail () {
+    sendAllFailedEmail () {
+      let result = confirm('Yakin kirim ulang SEMUA ?');
+      if (!result) return
       this.loadingSend = true
       this.$axios.post('http://pinguin.dinus.ac.id:3000/send/fls-registration', {
         secret: 'h3s0y4m',
