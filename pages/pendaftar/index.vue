@@ -55,7 +55,7 @@
         <template slot="items" slot-scope="props">
           <!-- <td></td> -->
           <tr @click="props.expanded = !props.expanded" class="cursor-pointer">
-            <td>
+            <td style="min-width: 250px;">
               <v-avatar
                 size="48px"
                 color="grey"
@@ -65,7 +65,7 @@
               <v-icon :color="props.item.gender == 'male' ? 'info' : 'pink'">{{ iconGender(props.item.gender) }}</v-icon>
               {{ props.item.fullname }}
             </td>
-            <td class="text-xs-left">
+            <td class="">
               <v-avatar
                 tile
                 size="38px"
@@ -83,6 +83,9 @@
             <td class="text-xs-left">
               <v-icon v-if="props.item.scoredBy" color="success">check_circle</v-icon>
               <span v-else>-</span>
+            </td>
+            <td class="text-xs-left" style="padding: 0;">
+              <v-btn @click="resendEmail(props.item)" :loading="loadingSend" color="error" small>resend email</v-btn>
             </td>
           </tr>
         </template>
@@ -148,6 +151,7 @@ export default {
         { text: 'Essay', value: 'scoreEssay' },
         { text: 'Nilai Total', value: 'scoreTotal' },
         { text: 'Dinilai', value: 'scored' },
+        { text: '', value: '', sortable: false },
       ],
       roomLists: [
         { text: 'All Room', value: '' },
@@ -165,6 +169,7 @@ export default {
       loadingBtnWaiting: false,
       loadingBtnDelegates: false,
       loadingBtnRemoveList: false,
+      loadingSend: false,
       scored: false,
       tabs: 0
     }
@@ -282,6 +287,24 @@ export default {
       }).catch(error => {
         this.loadingRegistrar = false
         this.notify({ type: 'error', message: error.message })
+      })
+    },
+    resendEmail (data) {
+      let result = confirm('Kirim ulang email ' + data.email + '?');
+      if (!result) return
+      this.loadingSend = true
+      this.$axios.post('http://pinguin.dinus.ac.id:3000/send/fls-registration', {
+        secret: 'h3s0y4m',
+        email: data.email,
+        fullname: data.fullname,
+        roomFirst: data.roomFirst,
+        nickname: data.nickname,
+      }).then(response => {
+        this.notify({ type: 'success', message: 'berhasil kirim email ' + data.email })
+        this.loadingSend = false
+      }).catch(error => {
+        this.notify({ type: 'error', message: error.message })
+        this.loadingSend = false
       })
     },
     addToWaitingList (data) {
