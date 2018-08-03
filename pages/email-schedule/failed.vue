@@ -1,6 +1,7 @@
 <template>
   <v-layout>
     <v-flex>
+      <v-btn @click="sendFailedEmail()" color="error" :loading="loadingSend">Kirim Ulang Semua</v-btn>
       <v-card>
         <v-card-title>
           <h4 class="title">Gagal: {{ listAgenda.length }}</h4>
@@ -45,7 +46,15 @@ export default {
         { text: 'Reason', value: 'failReason' },
       ],
       loading: false,
+      loadingSend: false,
       listAgenda: []
+    }
+  },
+  computed: {
+    emailList () {
+      return this.listAgenda.map(item => {
+        return item.data
+      })
     }
   },
   methods: {
@@ -66,6 +75,19 @@ export default {
         this.notify({ type: 'error', message: error.message })
       })
     },
+    sendFailedEmail () {
+      this.loadingSend = true
+      this.$axios.post('http://pinguin.dinus.ac.id:3000/send/fls-registration', {
+        secret: 'h3s0y4m',
+        emailList: JSON.stringify(this.emailList)
+      }).then(response => {
+        this.notify({ type: 'success', message: 'berhasil kirim email' })
+        this.loadingSend = false
+      }).catch(error => {
+        this.notify({ type: 'error', message: error.message })
+        this.loadingSend = false
+      })
+    }
   },
   mounted () {
     this.getListAgenda()
