@@ -19,7 +19,7 @@
           >
             <v-progress-linear slot="progress" color="info" indeterminate></v-progress-linear>
             <template slot="items" slot-scope="props">
-              <td><v-chip color="error" small text-color="white">failed</v-chip></td>
+              <td><v-btn @click="resendEmail(props.item.data)" color="error" small>failed</v-btn></td>
               <td class="text-xs-left">{{ props.item.name }}</td>
               <td class="text-xs-left">{{ props.item.data.email }}</td>
               <td class="text-xs-left">{{ props.item.failedAt | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}</td>
@@ -85,6 +85,24 @@ export default {
         emailList: JSON.stringify(this.emailList)
       }).then(response => {
         this.notify({ type: 'success', message: 'berhasil kirim email' })
+        this.loadingSend = false
+      }).catch(error => {
+        this.notify({ type: 'error', message: error.message })
+        this.loadingSend = false
+      })
+    },
+    resendEmail (data) {
+      let result = confirm('Kirim ulang email ' + data.email + '?');
+      if (!result) return
+      this.loadingSend = true
+      this.$axios.post('http://pinguin.dinus.ac.id:3000/send/fls-registration', {
+        secret: 'h3s0y4m',
+        email: data.email,
+        fullname: data.fullname,
+        roomFirst: data.roomFirst,
+        nickname: data.nickname,
+      }).then(response => {
+        this.notify({ type: 'success', message: 'berhasil kirim email ' + data.email })
         this.loadingSend = false
       }).catch(error => {
         this.notify({ type: 'error', message: error.message })
