@@ -25,7 +25,7 @@
           </v-btn>
 
           <v-list>
-            <v-list-tile>
+            <v-list-tile @click="exportCsv()">
               <v-list-tile-title>Download</v-list-tile-title>
             </v-list-tile>
           </v-list>
@@ -140,6 +140,7 @@
 <script>
 import { mapActions } from 'vuex'
 import _debounce from 'lodash/debounce'
+import Papa from 'papaparse'
 
 export default {
   data () {
@@ -178,6 +179,15 @@ export default {
     filterRoom: {
       get () { return this.$store.state.roomSelected },
       set (val) { this.$store.dispatch('setRoomSelected', val) }
+    },
+    itemExports () {
+      return this.registrarItems.map(element => {
+        return {
+          status: this.getAcceptanceStatus(element.acceptanceStatus),
+          name: element.fullname,
+          email: element.email
+        }
+      })
     },
     search () {
       return this.$store.state.searchField
@@ -307,6 +317,17 @@ export default {
         this.loadingSend = false
       })
     },
+    async exportCsv () {
+      console.log('proses export...');
+      let result = await Papa.unparse(this.itemExports, { download: true })
+      let uriContent = "data:text/csv;charset=utf-8," + encodeURIComponent(result);
+      let link = document.createElement("a");
+      link.setAttribute("href", uriContent);
+      let filename = '' + this.getAcceptanceStatus(this.tabs) + '.csv'
+      link.setAttribute("download", filename);
+      document.body.appendChild(link); // Required for FF
+      link.click();
+    },
     addToWaitingList (data) {
       this.loadingBtnWaiting = true
 
@@ -393,6 +414,18 @@ export default {
           return 'https://user-images.githubusercontent.com/21119252/41973340-e2cc96bc-7a3e-11e8-8a25-a079c0b6e279.png'
         default:
           return 'https://user-images.githubusercontent.com/21119252/41821836-c2787e10-7810-11e8-8d2a-cc829bea4ae3.png'
+      }
+    },
+    getAcceptanceStatus (status) {
+      switch (status) {
+        case 0:
+          return 'Belum Dinilai'
+        case 1:
+          return 'Waiting List'
+        case 2:
+          return 'Diterima Delegates'
+        default:
+          return 'Pendaftar'
       }
     }
   },
