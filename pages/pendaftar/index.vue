@@ -184,8 +184,24 @@ export default {
       return this.registrarItems.map(element => {
         return {
           status: this.getAcceptanceStatus(element.acceptanceStatus),
-          name: element.fullname,
-          email: element.email
+          room: element.roomFirst,
+          nama: element.fullname,
+          email: element.email,
+          ttl: element.placeOfBirth + ', ' + this.$moment(element.dateOfBirth).format('DD MMMM YYYY'),
+          gender: element.gender,
+          alamat: element.domicileAddress,
+          kota: element.city,
+          provinsi: element.province,
+          universitas: element.institution,
+          instagram: element.socmed.instagram,
+          line: element.socmed.line,
+          hp: element.phone,
+          'skor prestasi': element.scoreAuto.achievement,
+          'skor organisasi': element.scoreAuto.organization,
+          'skor sosial': element.scoreAuto.socialActivity,
+          'skor essay': element.scoreEssay,
+          'skor total': element.scoreTotal,
+          'dinilai oleh': element.scoredBy.username
         }
       })
     },
@@ -323,7 +339,7 @@ export default {
       let uriContent = "data:text/csv;charset=utf-8," + encodeURIComponent(result);
       let link = document.createElement("a");
       link.setAttribute("href", uriContent);
-      let filename = '' + this.getAcceptanceStatus(this.tabs) + '.csv'
+      let filename = '' + this.filterRoom + ' ' + this.getAcceptanceStatus(this.tabs) + '.csv'
       link.setAttribute("download", filename);
       document.body.appendChild(link); // Required for FF
       link.click();
