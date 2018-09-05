@@ -55,6 +55,7 @@
         <template slot="items" slot-scope="props">
           <!-- <td></td> -->
           <tr @click="props.expanded = !props.expanded" class="cursor-pointer">
+            <td>{{ props.index + 1 }}</td>
             <td style="min-width: 250px;">
               <v-avatar
                 size="48px"
@@ -76,16 +77,12 @@
             </td>
             <!-- <td class="text-xs-left">{{ props.item.roomFirst }}</td> -->
             <td class="text-xs-left">{{ props.item.email }}</td>
-            <td class="text-xs-left">{{ props.item.scoreEssay }}</td>
             <td class="text-xs-left">
               <strong>{{ props.item.scoreTotal }}</strong>
             </td>
             <td class="text-xs-left">
               <v-icon v-if="props.item.scoredBy" color="success">check_circle</v-icon>
               <span v-else>-</span>
-            </td>
-            <td class="text-xs-left" style="padding: 0;">
-              <v-btn @click="resendEmail(props.item)" :loading="loadingSend" color="error" small>resend email</v-btn>
             </td>
           </tr>
         </template>
@@ -146,13 +143,12 @@ export default {
   data () {
     return {
       headers: [
+        { text: 'No', value: 'fullname', sortable: false },
         { text: 'Nama', value: 'fullname' },
         { text: 'Room', value: 'roomFirst' },
         { text: 'Email', value: 'email' },
-        { text: 'Essay', value: 'scoreEssay' },
         { text: 'Nilai Total', value: 'scoreTotal' },
         { text: 'Dinilai', value: 'scored' },
-        { text: '', value: '', sortable: false },
       ],
       roomLists: [
         { text: 'All Room', value: '' },

@@ -98,11 +98,11 @@ export default {
       userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
         { icon: 'table_chart', title: 'Data Pendaftar', to: '/pendaftar' },
-        { icon: 'comment', title: 'Umpan Balik', to: '/umpan-balik' },
+        // { icon: 'comment', title: 'Umpan Balik', to: '/umpan-balik' },
         // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],
       adminItems: [
-        { icon: 'mail', title: 'Pengiriman email', to: '/email-schedule' },
+        // { icon: 'mail', title: 'Pengiriman email', to: '/email-schedule' },
         { icon: 'person', title: 'User', to: '/users' }
       ],
       miniVariant: false,
