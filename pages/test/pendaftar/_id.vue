@@ -16,35 +16,17 @@
     </v-btn>
     <v-dialog v-model="dialog" :persistent="loading" max-width="290">
       <v-card>
-        <v-card-title class="title pb-0">Beri nilai untuk {{ registrar.fullName }}</v-card-title>
+        <v-card-title class="title pb-0">Beri nilai untuk {{ registrar.fullname }}</v-card-title>
         <v-card-text>
           <v-text-field
-              v-model="score.essayMotivationJoin"
-              label="essayMotivationJoin"
-              data-vv-as="essayMotivationJoin"
-              :error-messages="errors.collect('essayMotivationJoin')"
+              v-model="score"
+              label="Nilai"
+              data-vv-as="Nilai"
+              :error-messages="errors.collect('nilai')"
               v-validate="'required|min_value:1|max_value:100'"
               prepend-icon="assignment"
-              data-vv-name="essayMotivationJoin"
+              data-vv-name="nilai"
             ></v-text-field>
-          <v-text-field
-              v-model="score.essayRoomSelected"
-              label="essayRoomSelected"
-              data-vv-as="essayRoomSelected"
-              :error-messages="errors.collect('essayRoomSelected')"
-              v-validate="'required|min_value:1|max_value:100'"
-              prepend-icon="assignment"
-              data-vv-name="essayRoomSelected"
-            ></v-text-field>
-          <v-text-field
-              v-model="score.essayCaseStudy"
-              label="essayCaseStudy"
-              data-vv-as="essayCaseStudy"
-              :error-messages="errors.collect('essayCaseStudy')"
-              v-validate="'required|min_value:1|max_value:100'"
-              prepend-icon="assignment"
-              data-vv-name="essayCaseStudy"
-            ></v-text-field>            
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" outline round @click.native="dialog = false">Batal</v-btn>
@@ -75,11 +57,7 @@ export default {
       loadingRegistrar: false,
       dialog: false,
       loading: false,
-      score: {
-        essayMotivationJoin: 0,
-        essayRoomSelected: 0,
-        essayCaseStudy: 0,
-      },
+      score: 0,
     }
   },
   computed: {
@@ -89,13 +67,12 @@ export default {
     ...mapActions(['notify']),
     getDataRegistrar () {
       this.loadingRegistrar = true
-      this.$axios.$get('/delegates/' + this.$route.params.id, {
+      this.$axios.$get('/registrars/' + this.$route.params.id, {
         params: {
         }
       }).then(response => {
-        this.registrar = response.data
-        // console.log(this.re)
-        console.log('registrar ', this.registrar)
+        this.registrar = response
+        console.log('registrar ', response)
         this.loadingRegistrar = false
       }).catch(error => {
         console.log('--- awh error ----')
@@ -127,40 +104,20 @@ export default {
       this.loading = true
 
       let registrar = {...this.registrar}
-      // registrar.Score.essayMotivationJoin = parseInt(score.essayMotivationJoin)
-      registrar.userId = this.userInfo.id
-      
-      console.log(this.userInfo);
-
-      let score = this.score;
-
-      registrar.scores.essayMotivationJoin = parseInt(score.essayMotivationJoin)
-      registrar.scores.essayRoomSelected = parseInt(score.essayRoomSelected)
-      registrar.scores.essayCaseStudy = parseInt(score.essayCaseStudy)
-      
+      registrar.scoreEssay = this.score
+      registrar.scoredById = this.userInfo.id
       delete registrar['id']
-      console.log(this.registrar.id);
-      console.log('score : ',score);
+
       this.$axios({
         method: 'PUT',
-        url: '/scores/' + this.registrar.id,
-        data: registrar.scores
+        url: '/Registrars/' + this.registrar.id,
+        data: registrar
       }).then(response => {
-        console.log('penilaian :',response);
-        console.log(this.userInfo.id);
-        return this.$axios({
-          method: 'PUT',
-          url: '/delegates/' + this.registrar.id, 
-          data: {
-            userId: this.userInfo.id
-          }  
-        })
-      }).then(user => {
-        this.notify({ type: 'success', message: 'Berhasil essayMotivationJoin  ' + this.registrar.fullName })
+        this.notify({ type: 'success', message: 'Berhasil nilai  ' + this.registrar.fullname + ' ' + this.score })
         this.$router.push('/pendaftar')
         // this.getDataRegistrar()
         this.loading = false
-        this.dialog = false        
+        this.dialog = false
       }).catch(error => {
         this.notify({ type: 'error', message: error.message })
         this.loading = false
@@ -168,7 +125,7 @@ export default {
     },
 
   },
-  mounted () {
+  created () {
     this.getDataRegistrar()
   },
   components: { DetailRegistrar }

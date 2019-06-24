@@ -63,8 +63,8 @@
                 class="mr-2 my-1">
                 <img :src="'https://img.devidentify.com/' + props.item.email" alt="">
               </v-avatar>
-              <v-icon :color="props.item.gender == true ? 'info' : 'pink'">{{ iconGender(props.item.gender) }}</v-icon>
-              {{ props.item.fullName }}
+              <v-icon :color="props.item.gender == 'male' ? 'info' : 'pink'">{{ iconGender(props.item.gender) }}</v-icon>
+              {{ props.item.fullname }}
             </td>
             <td class="">
               <v-avatar
@@ -72,16 +72,16 @@
                 size="38px"
                 color="grey"
                 class="mx-3">
-                <img :src="getRoomImageUrl(props.item.Room.firstRoom)" alt="">
+                <img :src="getRoomImageUrl(props.item.roomFirst)" alt="">
               </v-avatar>
             </td>
             <!-- <td class="text-xs-left">{{ props.item.roomFirst }}</td> -->
             <td class="text-xs-left">{{ props.item.email }}</td>
             <td class="text-xs-left">
-              <strong>{{ props.item.Score.total }}</strong>
+              <strong>{{ props.item.scoreTotal }}</strong>
             </td>
             <td class="text-xs-left">
-              <v-icon v-if="props.item.userId" color="success">check_circle</v-icon>
+              <v-icon v-if="props.item.scoredBy" color="success">check_circle</v-icon>
               <span v-else>-</span>
             </td>
           </tr>
@@ -89,30 +89,30 @@
         <template slot="expand" slot-scope="props">
           <v-card color="cloud">
             <v-card-text>
-              <template v-if="props.item.userId">
-                <v-chip v-if="props.item.status == 1" label color="info" outline>
+              <template v-if="props.item.scoredBy">
+                <v-chip v-if="props.item.acceptanceStatus == 1" label color="info" outline>
                   <span class="mr-1">status: </span> <strong> Waiting List</strong>
                 </v-chip>
-                <v-chip v-if="props.item.status == 2" label color="info" outline>
+                <v-chip v-if="props.item.acceptanceStatus == 2" label color="info" outline>
                   <span class="mr-1">status: </span> <strong> Diterima Delegates</strong>
                 </v-chip>
                 <v-chip label color="info" outline>
-                  <span class="mr-1">dinilai oleh: </span> <strong> {{ props.item.User.name }}</strong>
+                  <span class="mr-1">dinilai oleh: </span> <strong> {{ props.item.scoredBy.username }}</strong>
                 </v-chip>
                 <v-btn outline color="success" :to="'' + props.item.id" append>
                   <v-icon left="">edit</v-icon>
                   Edit Nilai
                 </v-btn>
                 <br>
-                <v-btn v-if="props.item.status != 1"  round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
+                <v-btn v-if="props.item.acceptanceStatus != 1"  round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
                   <v-icon left="">add_to_queue</v-icon>
                   Masukkan Waiting List
                 </v-btn>
-                <v-btn v-if="props.item.status != 2"  round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
+                <v-btn v-if="props.item.acceptanceStatus != 2"  round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
                   <v-icon left="">check</v-icon>
                   Terima Jadi Delegates
                 </v-btn>
-                <v-btn v-if="props.item.status == 1 || props.item.status == 2"  round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
+                <v-btn v-if="props.item.acceptanceStatus == 1 || props.item.acceptanceStatus == 2"  round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
                   <v-icon left="">close</v-icon>
                   Keluarkan
                 </v-btn>
@@ -143,8 +143,8 @@ export default {
   data () {
     return {
       headers: [
-        { text: 'No', value: 'fullName', sortable: false },
-        { text: 'Nama', value: 'fullName' },
+        { text: 'No', value: 'fullname', sortable: false },
+        { text: 'Nama', value: 'fullname' },
         { text: 'Room', value: 'roomFirst' },
         { text: 'Email', value: 'email' },
         { text: 'Nilai Total', value: 'scoreTotal' },
@@ -179,9 +179,9 @@ export default {
     itemExports () {
       return this.registrarItems.map(element => {
         return {
-          status: this.getstatus(element.status),
+          status: this.getAcceptanceStatus(element.acceptanceStatus),
           room: element.roomFirst,
-          nama: element.fullName,
+          nama: element.fullname,
           email: element.email,
           ttl: element.placeOfBirth + ', ' + this.$moment(element.dateOfBirth).format('DD MMMM YYYY'),
           gender: element.gender,
@@ -197,7 +197,7 @@ export default {
           'skor sosial': element.scoreAuto.socialActivity,
           'skor essay': element.scoreEssay,
           'skor total': element.scoreTotal,
-          'dinilai oleh': element.userId.name
+          'dinilai oleh': element.scoredBy.username
         }
       })
     },
@@ -242,52 +242,36 @@ export default {
       this.loadingRegistrar = true
       let scoreEssay = { scoreEssay: { lt: 1 } }
       if (this.tabs > 0) scoreEssay = {}
-      // console.log(this.tabs);
-      // let status = { status: this.tabs }
-      let status = this.tabs
-      // console.log('score total', this.registrarItems.Score);
-      console.log('status : ',status);
-      let filterWhere;
-      if(this.tabs === 0) {
-        filterWhere = {
-          filter: 1,
-          limit: this.pagination.rowsPerPage,
-          status: status,
-          score: 1
-        }          
-      } else if (this.tabs === 2) {
-        filterWhere = {
-          filter: 1,
-          limit: this.pagination.rowsPerPage,
-          status: status,          
-        }
-      } else {
-        filterWhere = {
-          limit: this.pagination.rowsPerPage,
-        }        
+
+      let acceptanceStatus = { acceptanceStatus: this.tabs }
+      if (this.tabs > 2) acceptanceStatus = {}
+
+      let filterWhere = {
+        and: [
+          scoreEssay,
+          acceptanceStatus,
+          { roomFirst: { like: this.filterRoom } },
+          { or: [
+            { fullname: { like: (this.search || '') + '.*', options: 'i' } },
+            { email: { like: (this.search || '') + '.*', options: 'i' } }
+          ]}
+        ]
       }
-      console.log(this.tabs)
-      // let filterWhere = {
-      //   and: [
-      //     scoreEssay,
-      //     status,
-      //     { roomFirst: { like: this.filterRoom } },
-      //     { or: [
-      //       { fullName: { like: (this.search || '') + '.*', options: 'i' } },
-      //       { email: { like: (this.search || '') + '.*', options: 'i' } }
-      //     ]}
-      //   ]
-      // }
 
       this.$axios.$get('/delegates', {
-        params: filterWhere
+        params: {
+          filter: {
+            include: 'scoredBy',
+            order: this.orderBy,
+            skip: this.skip,
+            limit: this.pagination.rowsPerPage,
+            where: filterWhere
+          }
+        }
       }).then(response => {
-        console.log(response.data)
-        this.registrarItems = response.data
-        // console.log('hello :',this.registrarItems)
-        // console.log('sebelum register : ',response.data)
+        this.registrarItems = response
         this.loadingRegistrar = false
-        // this.getTotalRegistrars(filterWhere)
+        this.getTotalRegistrars(filterWhere)
         console.log('registrar ', response)
       }).catch(error => {
         console.log('--- awh error ----')
@@ -315,8 +299,12 @@ export default {
     },
     getTotalRegistrars (filter) {
       this.loadingRegistrar = true
-      this.$axios.$get('/delegates/count').then(response => {
-        this.totalRegistrar = response.data.data.count
+      this.$axios.$get('/delegates/count', {
+        params: {
+          where: filter
+        }
+      }).then(response => {
+        this.totalRegistrar = response.count
         this.loadingRegistrar = false
       }).catch(error => {
         this.loadingRegistrar = false
@@ -330,7 +318,7 @@ export default {
       this.$axios.post('http://pinguin.dinus.ac.id:3000/send/fls-registration', {
         secret: 'h3s0y4m',
         email: data.email,
-        fullName: data.fullName,
+        fullname: data.fullname,
         roomFirst: data.roomFirst,
         nickname: data.nickname,
       }).then(response => {
@@ -347,7 +335,7 @@ export default {
       let uriContent = "data:text/csv;charset=utf-8," + encodeURIComponent(result);
       let link = document.createElement("a");
       link.setAttribute("href", uriContent);
-      let filename = '' + this.filterRoom + ' ' + this.getstatus(this.tabs) + '.csv'
+      let filename = '' + this.filterRoom + ' ' + this.getAcceptanceStatus(this.tabs) + '.csv'
       link.setAttribute("download", filename);
       document.body.appendChild(link); // Required for FF
       link.click();
@@ -356,15 +344,15 @@ export default {
       this.loadingBtnWaiting = true
 
       let registrar = {...data}
-      registrar.status = 1
+      registrar.acceptanceStatus = 1
       delete registrar['id']
 
       this.$axios({
         method: 'PUT',
-        url: '/delegates/' + data.id,
+        url: '/Registrars/' + data.id,
         data: registrar
       }).then(response => {
-        this.notify({ type: 'success', message: response.data.fullName + ' ditambahkan ke waiting list' })
+        this.notify({ type: 'success', message: response.data.fullname + ' ditambahkan ke waiting list' })
         this.fetchDataRegistrars()
         this.loadingBtnWaiting = false
       }).catch(error => {
@@ -376,15 +364,15 @@ export default {
       this.loadingBtnDelegates = true
 
       let registrar = {...data}
-      registrar.status = 2
+      registrar.acceptanceStatus = 2
       delete registrar['id']
 
       this.$axios({
         method: 'PUT',
-        url: '/delegates/' + data.id,
+        url: '/Registrars/' + data.id,
         data: registrar
       }).then(response => {
-        this.notify({ type: 'success', message: response.data.data.fullName + ' diterima jadi Delegates' })
+        this.notify({ type: 'success', message: response.data.fullname + ' diterima jadi Delegates' })
         this.fetchDataRegistrars()
         this.loadingBtnDelegates = false
       }).catch(error => {
@@ -396,7 +384,7 @@ export default {
       this.loadingBtnRemoveList = true
 
       let registrar = {...data}
-      registrar.status = 0
+      registrar.acceptanceStatus = 0
       delete registrar['id']
 
       this.$axios({
@@ -404,7 +392,7 @@ export default {
         url: '/Registrars/' + data.id,
         data: registrar
       }).then(response => {
-        this.notify({ type: 'success', message: response.data.fullName + ' dikeluarkan dari list' })
+        this.notify({ type: 'success', message: response.data.fullname + ' dikeluarkan dari list' })
         this.fetchDataRegistrars()
         this.loadingBtnRemoveList = false
       }).catch(error => {
@@ -413,11 +401,10 @@ export default {
       })
     },
     iconGender (gender) {
-      console.log('gender : ',gender)
       switch (gender) {
-        case true:
+        case 'male':
           return 'fas fa-mars'
-        case false:
+        case 'female':
           return 'fas fa-venus'
         default:
           return 'fas fa-genderless'
@@ -425,23 +412,23 @@ export default {
     },
     getRoomImageUrl (room) {
       switch (room) {
-        case 1:
+        case 'Education':
           return 'https://user-images.githubusercontent.com/21119252/41973205-85ec42bc-7a3e-11e8-9a29-e3f296080e21.png'
-        case 2:
+        case 'Digital':
           return 'https://user-images.githubusercontent.com/21119252/41973182-71436b92-7a3e-11e8-9d7e-8f039c0e67e3.png'
-        case 3:
+        case 'Poverty':
           return 'https://user-images.githubusercontent.com/21119252/41973269-aa219768-7a3e-11e8-8e77-6023aef4d135.png'
-        case 4:
+        case 'Human Capital':
           return 'https://user-images.githubusercontent.com/21119252/41973250-a087b4e4-7a3e-11e8-845b-ec4c8c38d34f.png'
-        case 5:
+        case 'Entrepreneurship':
           return 'https://user-images.githubusercontent.com/21119252/41973233-91527996-7a3e-11e8-9b1c-34e2b8ee0118.png'
-        case 6:
+        case 'Urban Planning':
           return 'https://user-images.githubusercontent.com/21119252/41973340-e2cc96bc-7a3e-11e8-8a25-a079c0b6e279.png'
         default:
           return 'https://user-images.githubusercontent.com/21119252/41821836-c2787e10-7810-11e8-8d2a-cc829bea4ae3.png'
       }
     },
-    getstatus (status) {
+    getAcceptanceStatus (status) {
       switch (status) {
         case 0:
           return 'Belum Dinilai'
@@ -458,7 +445,7 @@ export default {
     // this.fetchDataRegistrars()
     this.pagination.sortBy = 'scoreTotal'
     this.pagination.descending = true
-    
+    console.log('mounted');
   }
 }
 </script>

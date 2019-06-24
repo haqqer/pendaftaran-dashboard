@@ -120,7 +120,7 @@ export default {
       }
     },
     items () {
-      if (this.userInfo.roles[0].name == 'admin') {
+      if (this.userInfo.role == 'admin') {
         return [ ...this.userItems, ...this.adminItems ]
       }
       return this.userItems

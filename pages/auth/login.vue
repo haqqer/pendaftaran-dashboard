@@ -94,35 +94,32 @@ export default {
       this.loading = true
 
       this.$axios({
-        method: 'post',
-        url: '/users/login?include=user',
+        method: 'POST',
+        url: '/auth/login',
         data: {
-          username: this.email,
+          email: this.email,
           password: this.password
         }
-      }).then(response => {
-        this.saveToken(response.data.id)
-        let exp = this.$moment(response.data.created).unix() + response.data.ttl
+      }).then(result => {
+        const response = result.data;
+        // console.log(result);
+        console.log(result.data);
+        this.saveToken(response.data.token)
+        let exp = response.data.exp;
         this.saveTokenExp(exp)
         console.log('login ', response.data, exp, this.$moment().unix())
 
-        return this.$axios.$get('/users/' + response.data.userId, {
-          params: {
-            filter: { include: 'roles' },
-            access_token: response.data.id
-          }
-        })
-      }).then(user => {
-        console.log('userdetail ', user);
-        if (user.roles.length < 1) {
-          this.notify({ type: 'error', message: 'Maaf, akun ' + user.username + ' belum bisa digunakan. Hubungi admin' })
+        // return this.$axios.$get('/users/' + response.data.user.id)
+        console.log('userdetail ', response.data.user);
+        if (response.data.user == null) {
+          this.notify({ type: 'error', message: 'Maaf, akun ' + response.data.user.name + ' belum bisa digunakan. Hubungi admin' })
           this.logout()
         } else {
-          this.saveUserInfo(user)
+          this.saveUserInfo(response.data.user)
           this.$router.push('/')
-          this.notify({ type: 'success', message: 'Selamat Datang ' + user.username })
+          this.notify({ type: 'success', message: 'Selamat Datang ' + response.data.user.name })
         }
-        this.loading = false
+        this.loading = false        
       }).catch(error => {
         console.log('login error ', error)
         if (error.response) {

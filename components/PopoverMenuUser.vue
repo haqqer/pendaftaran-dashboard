@@ -15,7 +15,7 @@
           >
         </v-avatar>
         <span class="ml-1">
-          {{ userInfo.username }}
+          {{ userInfo.name }}
         </span>
         <v-icon>arrow_drop_down</v-icon>
       </v-btn>
@@ -26,8 +26,7 @@
               <img :src="avatar" alt="John">
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>{{ userInfo.roles[0].description }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ userInfo.roles[0].name }}</v-list-tile-sub-title>
+              <v-list-tile-sub-title>{{ userInfo.name }}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>

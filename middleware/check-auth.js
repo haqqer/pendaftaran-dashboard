@@ -5,6 +5,7 @@ export default function ({ store, route, redirect }) {
 
   function startSession () {
     let time = store.state.tokenExpire - Vue.moment().unix()
+    console.log(store.state.userInfo)
     console.log('session waktu ', time, ' second')
     setTimeout(() => {
       store.dispatch('notify', { type: 'error', message: 'Token expired, silakan login kembali' });

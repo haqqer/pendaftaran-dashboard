@@ -60,7 +60,7 @@ module.exports = {
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
     // baseURL: 'http://128.199.72.101:3000/api'
-    baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'http://128.199.72.101:3000/api'
+    baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : 'http://128.199.72.101:3000/api'
   },
 
   generate: {

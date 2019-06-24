@@ -16,10 +16,10 @@
             size="38px"
             color="grey"
             class="mx-3">
-            <img :src="getRoomImageUrl(registrar.roomFirst)" alt="">
+            <img :src="getRoomImageUrl(registrar.room.firstRoom)" alt="">
           </v-avatar>
         </h3>
-        <div style="text-transform: capitalize;">{{ registrar.institution.toLowerCase() }}</div>
+        <div style="text-transform: capitalize;">{{ registrar.institution }}</div>
         <v-btn v-if="registrar.socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.socmed.instagram" target="_blank">
           <v-icon>fab fa-instagram</v-icon>
         </v-btn>
@@ -47,16 +47,16 @@
         </v-tab>
         <v-tab-item>
           <strong>Motivasi Ikut FLS</strong>
-          <small class="ml-2">( {{ wordCount(registrar.essayMotivationJoin) }} kata )</small>
-          <p>{{ registrar.essayMotivationJoin }}</p>
+          <small class="ml-2">( {{ wordCount(registrar.essay.essayMotivationJoin) }} kata )</small>
+          <p>{{ registrar.essay.essayMotivationJoin }}</p>
 
           <strong>Alasan memilih room {{ registrar.roomFirst }}</strong>
-          <small class="ml-2">( {{ wordCount(registrar.essayRoomSelected) }} kata )</small>
-          <p>{{ registrar.essayRoomSelected }}</p>
+          <small class="ml-2">( {{ wordCount(registrar.essay.essayRoomSelected) }} kata )</small>
+          <p>{{ registrar.essay.essayRoomSelected }}</p>
 
           <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
-          <small class="ml-2">( {{ wordCount(registrar.essayCaseStudy) }} kata )</small>
-          <p>{{ registrar.essayCaseStudy }}</p>
+          <small class="ml-2">( {{ wordCount(registrar.essay.essayCaseStudy) }} kata )</small>
+          <p>{{ registrar.essay.essayCaseStudy }}</p>
         </v-tab-item>
         <v-tab-item>
           <strong>Nama</strong>
@@ -129,11 +129,13 @@
       <v-divider></v-divider>
 
       <h4 class="subheading">Nilai - </h4>
-      <div><strong>Prestasi</strong> {{ registrar.scoreAuto.achievement }}</div>
-      <div><strong>Organisasi</strong> {{ registrar.scoreAuto.organization }}</div>
-      <div><strong>Sosial</strong> {{ registrar.scoreAuto.socialActivity }}</div>
-      <div><strong>Essay</strong> {{ registrar.scoreEssay }}</div>
-      <div><strong>Total</strong> {{ registrar.scoreTotal }}</div>
+      <div><strong>Prestasi</strong> {{ registrar.scores.achievement }}</div>
+      <div><strong>Organisasi</strong> {{ registrar.scores.organization }}</div>
+      <div><strong>Sosial</strong> {{ registrar.scores.socialActivity }}</div>
+      <div><strong>Essay Motivation Join</strong> {{ registrar.scores.essayMotivationJoin }}</div>
+      <div><strong>Essay Room Selected</strong> {{ registrar.scores.essayRoomSelected }}</div>
+      <div><strong>Essay Case Study</strong> {{ registrar.scores.essayCaseStudy }}</div>
+      <div><strong>Total</strong> {{ registrar.scores.total }}</div>
     </v-card-text>
     <v-card-actions class="">
 
@@ -158,6 +160,9 @@ export default {
       ]
     }
   },
+  mounted() {
+    console.log(this.$props);
+  },
   methods: {
     iconGender (gender) {
       switch (gender) {
@@ -176,17 +181,17 @@ export default {
     },
     getRoomImageUrl (room) {
       switch (room) {
-        case 'Education':
+        case 1:
           return 'https://user-images.githubusercontent.com/21119252/41973205-85ec42bc-7a3e-11e8-9a29-e3f296080e21.png'
-        case 'Digital':
+        case 2:
           return 'https://user-images.githubusercontent.com/21119252/41973182-71436b92-7a3e-11e8-9d7e-8f039c0e67e3.png'
-        case 'Poverty':
+        case 3:
           return 'https://user-images.githubusercontent.com/21119252/41973269-aa219768-7a3e-11e8-8e77-6023aef4d135.png'
-        case 'Human Capital':
+        case 4:
           return 'https://user-images.githubusercontent.com/21119252/41973250-a087b4e4-7a3e-11e8-845b-ec4c8c38d34f.png'
-        case 'Entrepreneurship':
+        case 5:
           return 'https://user-images.githubusercontent.com/21119252/41973233-91527996-7a3e-11e8-9b1c-34e2b8ee0118.png'
-        case 'Urban Planning':
+        case 6:
           return 'https://user-images.githubusercontent.com/21119252/41973340-e2cc96bc-7a3e-11e8-8a25-a079c0b6e279.png'
         default:
           return 'https://user-images.githubusercontent.com/21119252/41821836-c2787e10-7810-11e8-8d2a-cc829bea4ae3.png'
