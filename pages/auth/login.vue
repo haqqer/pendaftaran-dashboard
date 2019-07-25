@@ -121,6 +121,7 @@ export default {
         }
         this.loading = false        
       }).catch(error => {
+        console.log(error.response)
         console.log('login error ', error)
         if (error.response) {
           // The request was made and the server responded with a status code
