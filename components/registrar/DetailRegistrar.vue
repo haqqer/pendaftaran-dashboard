@@ -10,21 +10,27 @@
       </v-avatar>
       <div>
         <h3 class="title mb-0">
-          {{ registrar.fullname }}
+          {{ registrar.fullName }}
           <v-avatar
             tile
             size="38px"
             color="grey"
             class="mx-3">
-            <img :src="getRoomImageUrl(registrar.room.firstRoom)" alt="">
+            <!-- <img :src="getRoomImageUrl(registrar.Room.firstRoom)" alt=""> -->
           </v-avatar>
         </h3>
         <div style="text-transform: capitalize;">{{ registrar.institution }}</div>
-        <v-btn v-if="registrar.socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.socmed.instagram" target="_blank">
+        <v-btn v-if="registrar.Socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.Socmed.instagram" target="_blank">
           <v-icon>fab fa-instagram</v-icon>
         </v-btn>
-        <v-btn v-if="registrar.socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.socmed.line" target="_blank">
+        <v-btn v-if="registrar.Socmed.facebook" small icon color="primary" :href="'https://www.facebook.com/search/top/?q=' + registrar.Socmed.facebook" target="_blank">
+          <v-icon>fab fa-facebook-f</v-icon>
+        </v-btn>
+        <v-btn v-if="registrar.Socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.Socmed.line" target="_blank">
           <v-icon>fab fa-line</v-icon>
+        </v-btn>
+        <v-btn v-if="registrar.phone" small icon color="success" :href="'https://api.whatsapp.com/send?phone=' + registrar.phone" target="_blank">
+          <v-icon>fab fa-whatsapp</v-icon>
         </v-btn>
       </div>
     </v-card-title>
@@ -47,26 +53,26 @@
         </v-tab>
         <v-tab-item>
           <strong>Motivasi Ikut FLS</strong>
-          <small class="ml-2">( {{ wordCount(registrar.essay.essayMotivationJoin) }} kata )</small>
-          <p>{{ registrar.essay.essayMotivationJoin }}</p>
+          <small class="ml-2">( {{ wordCount(registrar.Essay.essayMotivationJoin) }} kata )</small>
+          <p>{{ registrar.Essay.essayMotivationJoin }}</p>
 
-          <strong>Alasan memilih room {{ registrar.roomFirst }}</strong>
-          <small class="ml-2">( {{ wordCount(registrar.essay.essayRoomSelected) }} kata )</small>
-          <p>{{ registrar.essay.essayRoomSelected }}</p>
+          <strong>Alasan memilih room {{ registrar.Room.firstRoom }}</strong>
+          <small class="ml-2">( {{ wordCount(registrar.Essay.essayRoomSelected) }} kata )</small>
+          <p>{{ registrar.Essay.essayRoomSelected }}</p>
 
-          <strong>Studi kasus room {{ registrar.roomFirst }}</strong>
-          <small class="ml-2">( {{ wordCount(registrar.essay.essayCaseStudy) }} kata )</small>
-          <p>{{ registrar.essay.essayCaseStudy }}</p>
+          <strong>Studi kasus room {{ registrar.Room.firstRoom }}</strong>
+          <small class="ml-2">( {{ wordCount(registrar.Essay.essayCaseStudy) }} kata )</small>
+          <p>{{ registrar.Essay.essayCaseStudy }}</p>
         </v-tab-item>
         <v-tab-item>
           <strong>Nama</strong>
-          <p>{{ registrar.fullname }} , dipanggil {{registrar.nickname}}</p>
+          <p>{{ registrar.fullName }} , dipanggil {{registrar.nickName}}</p>
           <strong>Tempat Tanggal Lahir</strong>
           <p>{{ registrar.placeOfBirth }} , {{ registrar.dateOfBirth | moment('D MMMM YYYY') }}</p>
           <strong>Jenis Kelamin</strong>
           <p>
-            {{ registrar.gender == 'male' ? 'Laki-laki' : 'Perempuan' }}
-            <v-icon :color="registrar.gender == 'male' ? 'info' : 'pink'">{{ iconGender(registrar.gender) }}</v-icon>
+            {{ registrar.gender == false ? 'Laki-laki' : 'Perempuan' }}
+            <v-icon :color="registrar.gender == false ? 'info' : 'pink'">{{ iconGender(registrar.gender) }}</v-icon>
           </p>
           <strong>Alamat</strong>
           <p>
@@ -83,19 +89,24 @@
           </p>
           <strong>Sosmed</strong>
           <p>
-            <v-btn v-if="registrar.socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.socmed.instagram" target="_blank">
+            <v-btn v-if="registrar.Socmed.instagram" small icon color="primary" :href="'https://instagram.com/' + registrar.Socmed.instagram" target="_blank">
               <v-icon>fab fa-instagram</v-icon>
             </v-btn>
-            {{ registrar.socmed.instagram }}
+            {{ registrar.Socmed.instagram }}
             <br>
-            <v-btn v-if="registrar.socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.socmed.line" target="_blank">
+            <v-btn v-if="registrar.Socmed.facebook" small icon color="primary" :href="'https://www.facebook.com/search/top/?q=' + registrar.Socmed.facebook" target="_blank">
+              <v-icon>fab fa-facebook-f</v-icon>
+            </v-btn>
+            {{ registrar.Socmed.facebook }}
+            <br>
+            <v-btn v-if="registrar.Socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.Socmed.line" target="_blank">
               <v-icon>fab fa-line</v-icon>
             </v-btn>
-            {{ registrar.socmed.line }}
+            {{ registrar.Socmed.line }}
           </p>
         </v-tab-item>
         <v-tab-item>
-          <div v-for="(achievement, i) in registrar.achievements" :key="i">
+          <div v-for="(achievement, i) in registrar.Achievements" :key="i">
             <strong>{{ achievement.name }}</strong>
             <p>
               {{ achievement.rank }}
@@ -105,7 +116,7 @@
           </div>
         </v-tab-item>
         <v-tab-item>
-          <div v-for="(organization, i) in registrar.organizations" :key="i">
+          <div v-for="(organization, i) in registrar.Organizations" :key="i">
             <strong>{{ organization.name }}</strong>
             <p>
               {{ organization.position }}
@@ -115,7 +126,7 @@
           </div>
         </v-tab-item>
         <v-tab-item>
-          <div v-for="(socialActivity, i) in registrar.socialActivities" :key="i">
+          <div v-for="(socialActivity, i) in registrar.SocialActivities" :key="i">
             <strong>{{ socialActivity.name }}</strong>
             <p>
               Tingkat {{ socialActivity.level }}
@@ -129,13 +140,13 @@
       <v-divider></v-divider>
 
       <h4 class="subheading">Nilai - </h4>
-      <div><strong>Prestasi</strong> {{ registrar.scores.achievement }}</div>
-      <div><strong>Organisasi</strong> {{ registrar.scores.organization }}</div>
-      <div><strong>Sosial</strong> {{ registrar.scores.socialActivity }}</div>
-      <div><strong>Essay Motivation Join</strong> {{ registrar.scores.essayMotivationJoin }}</div>
-      <div><strong>Essay Room Selected</strong> {{ registrar.scores.essayRoomSelected }}</div>
-      <div><strong>Essay Case Study</strong> {{ registrar.scores.essayCaseStudy }}</div>
-      <div><strong>Total</strong> {{ registrar.scores.total }}</div>
+      <div><strong>Prestasi</strong> {{ registrar.Score.achievement }}</div>
+      <div><strong>Organisasi</strong> {{ registrar.Score.organization }}</div>
+      <div><strong>Sosial</strong> {{ registrar.Score.socialActivity }}</div>
+      <div><strong>Essay Motivation Join</strong> {{ registrar.Score.essayMotivationJoin }}</div>
+      <div><strong>Essay Room Selected</strong> {{ registrar.Score.essayRoomSelected }}</div>
+      <div><strong>Essay Case Study</strong> {{ registrar.Score.essayCaseStudy }}</div>
+      <div><strong>Total</strong> {{ registrar.Score.total }}</div>
     </v-card-text>
     <v-card-actions class="">
 
@@ -165,10 +176,11 @@ export default {
   },
   methods: {
     iconGender (gender) {
+      console.log('gender : ',gender)
       switch (gender) {
-        case 'male':
+        case false:
           return 'fas fa-mars'
-        case 'female':
+        case true:
           return 'fas fa-venus'
         default:
           return 'fas fa-genderless'
