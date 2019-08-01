@@ -1,7 +1,7 @@
 <template>
   <v-layout v-if="registrar">
     <v-flex md8>
-      <detail-registrar :registrar="registrar"></detail-registrar>
+      <detail-registrar :registrar="registrar[0]"></detail-registrar>
     </v-flex>
     <v-btn
       color="primary"
