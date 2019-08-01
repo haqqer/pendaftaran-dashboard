@@ -49,7 +49,7 @@
         :loading="loadingRegistrar"
         :headers="headers"
         :total-items="totalRegistrar"
-        :rows-per-page-items="[50]"
+        :rows-per-page-items="[5, 10, 25, 50, 10000]"
         :pagination.sync="pagination">
         <v-progress-linear slot="progress" color="info" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
@@ -63,7 +63,7 @@
                 class="mr-2 my-1">
                 <img :src="'https://img.devidentify.com/' + props.item.email" alt="">
               </v-avatar>
-              <v-icon :color="props.item.gender == true ? 'info' : 'pink'">{{ iconGender(props.item.gender) }}</v-icon>
+              <v-icon :color="props.item.gender == true ? 'pink' : 'info'">{{ iconGender(props.item.gender) }}</v-icon>
               {{ props.item.fullName }}
             </td>
             <td class="">
@@ -205,6 +205,7 @@ export default {
       return this.$store.state.searchField
     },
     pages () {
+      console.log('[pagination] '+this.pagination)
       if (this.pagination.rowsPerPage == null ||
         this.pagination.totalItems == null
       ) return 0
@@ -252,6 +253,7 @@ export default {
         filterWhere = {
           filter: 1,
           limit: this.pagination.rowsPerPage,
+          page: this.pagination.page,
           status: status,
           score: 1
         }          
@@ -259,11 +261,13 @@ export default {
         filterWhere = {
           filter: 1,
           limit: this.pagination.rowsPerPage,
+          page: this.pagination.page,
           status: status,          
         }
       } else {
         filterWhere = {
           limit: this.pagination.rowsPerPage,
+          page: this.pagination.page
         }        
       }
       console.log(this.tabs)
@@ -316,7 +320,8 @@ export default {
     getTotalRegistrars (filter) {
       this.loadingRegistrar = true
       this.$axios.$get('/delegates/count').then(response => {
-        this.totalRegistrar = response.data.data.count
+        this.totalRegistrar = response.data.count
+        console.log('[total register] '+response.data)
         this.loadingRegistrar = false
       }).catch(error => {
         this.loadingRegistrar = false
@@ -458,7 +463,7 @@ export default {
     // this.fetchDataRegistrars()
     this.pagination.sortBy = 'scoreTotal'
     this.pagination.descending = true
-    
+    this.getTotalRegistrars()
   }
 }
 </script>
