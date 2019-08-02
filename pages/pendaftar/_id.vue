@@ -88,6 +88,7 @@ export default {
   methods: {
     ...mapActions(['notify']),
     getDataRegistrar () {
+      console.log(this.userInfo);
       this.loadingRegistrar = true
       this.$axios.$get('/delegates/' + this.$route.params.id, {
         params: {
@@ -126,37 +127,39 @@ export default {
     submitScore () {
       this.loading = true
 
-      let registrar = {...this.registrar}
+      let registrar = {...this.registrar[0]}
       // registrar.Score.essayMotivationJoin = parseInt(score.essayMotivationJoin)
       registrar.userId = this.userInfo.id
-      
+      console.log('user info')
       console.log(this.userInfo);
-
-      let score = this.score;
-
-      registrar.scores.essayMotivationJoin = parseInt(score.essayMotivationJoin)
-      registrar.scores.essayRoomSelected = parseInt(score.essayRoomSelected)
-      registrar.scores.essayCaseStudy = parseInt(score.essayCaseStudy)
       
-      delete registrar['id']
-      console.log(this.registrar.id);
+      let score = this.score;
+      console.log('[score] '+score.essayMotivationJoin);
+      console.log(registrar)
+      registrar.Score.essayMotivationJoin = parseInt(score.essayMotivationJoin)
+      registrar.Score.essayRoomSelected = parseInt(score.essayRoomSelected)
+      registrar.Score.essayCaseStudy = parseInt(score.essayCaseStudy)
+      
+      // delete registrar['id']
+      console.log(registrar.id);
       console.log('score : ',score);
       this.$axios({
         method: 'PUT',
-        url: '/scores/' + this.registrar.id,
-        data: registrar.scores
+        url: '/scores/' + registrar.id,
+        data: registrar.Score
       }).then(response => {
         console.log('penilaian :',response);
         console.log(this.userInfo.id);
         return this.$axios({
           method: 'PUT',
-          url: '/delegates/' + this.registrar.id, 
+          url: '/delegates/' + registrar.id, 
           data: {
-            userId: this.userInfo.id
+            userId: this.userInfo.id,
+            status: 1
           }  
         })
       }).then(user => {
-        this.notify({ type: 'success', message: 'Berhasil essayMotivationJoin  ' + this.registrar.fullName })
+        this.notify({ type: 'success', message: 'Berhasil essayMotivationJoin  ' + registrar.fullName })
         this.$router.push('/pendaftar')
         // this.getDataRegistrar()
         this.loading = false

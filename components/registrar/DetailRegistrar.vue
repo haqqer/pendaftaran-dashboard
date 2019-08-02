@@ -16,7 +16,7 @@
             size="38px"
             color="grey"
             class="mx-3">
-            <!-- <img :src="getRoomImageUrl(registrar.Room.firstRoom)" alt=""> -->
+            <img :src="getRoomImageUrl(registrar.Room.firstRoom)" alt="">
           </v-avatar>
         </h3>
         <div style="text-transform: capitalize;">{{ registrar.institution }}</div>
@@ -109,8 +109,8 @@
           <div v-for="(achievement, i) in registrar.Achievements" :key="i">
             <strong>{{ achievement.name }}</strong>
             <p>
-              {{ achievement.rank }}
-              <br> Tingkat {{ achievement.level }}
+              Juara {{ achievement.rank }}
+              <br> Tingkat {{ getLevel(achievement.level) }}
               <br> {{ achievement.year }}
             </p>
           </div>
@@ -119,8 +119,8 @@
           <div v-for="(organization, i) in registrar.Organizations" :key="i">
             <strong>{{ organization.name }}</strong>
             <p>
-              {{ organization.position }}
-              <br> Tingkat {{ organization.level }}
+              Jabatan {{ organization.position }}
+              <br> Tingkat {{ getLevel(organization.level) }}
               <br> {{ organization.period }}
             </p>
           </div>
@@ -129,8 +129,8 @@
           <div v-for="(socialActivity, i) in registrar.SocialActivities" :key="i">
             <strong>{{ socialActivity.name }}</strong>
             <p>
-              Tingkat {{ socialActivity.level }}
-              <br> {{ socialActivity.year }}
+              Tingkat {{ getLevel(socialActivity.level) }}
+              <br> {{ socialActivity.period }}
             </p>
           </div>
         </v-tab-item>
@@ -161,7 +161,9 @@ export default {
   },
   data () {
     return {
+      baseURL: 'https://api.futureleadersummit.org/data',
       tabs: 0,
+      level: ['Internasional','Nasional', 'Daerah', 'Daerah', 'Universitas', 'Sekolah'],
       tabMenu: [
         { icon: 'assignment', name: 'Essay' },
         { icon: 'person', name: 'Bio' },
@@ -171,8 +173,9 @@ export default {
       ]
     }
   },
-  mounted() {
+  async mounted() {
     console.log(this.$props);
+    await this.getDataById();
   },
   methods: {
     iconGender (gender) {
@@ -191,20 +194,29 @@ export default {
                 .filter(function(n) { return n != '' })
                 .length;
     },
+    async getDataById() {
+      const province = await this.$axios.get(this.baseURL+'/provinces/'+this.registrar.province)
+      const city = await this.$axios.get(this.baseURL+'/regencies/'+this.registrar.city)
+      this.registrar.province = province.data.data.name;
+      this.registrar.city = city.data.data.name;
+    },
+    getLevel(value) {
+      return this.level[value]
+    },
     getRoomImageUrl (room) {
       switch (room) {
         case 1:
-          return 'https://user-images.githubusercontent.com/21119252/41973205-85ec42bc-7a3e-11e8-9a29-e3f296080e21.png'
+          return 'http://join.futureleadersummit.org/images/rooms/Digital.png'
         case 2:
-          return 'https://user-images.githubusercontent.com/21119252/41973182-71436b92-7a3e-11e8-9d7e-8f039c0e67e3.png'
+          return 'http://join.futureleadersummit.org/images/rooms/Education.png'
         case 3:
-          return 'https://user-images.githubusercontent.com/21119252/41973269-aa219768-7a3e-11e8-8e77-6023aef4d135.png'
+          return 'http://join.futureleadersummit.org/images/rooms/Environment.png'
         case 4:
-          return 'https://user-images.githubusercontent.com/21119252/41973250-a087b4e4-7a3e-11e8-845b-ec4c8c38d34f.png'
+          return 'http://join.futureleadersummit.org/images/rooms/International Relation.png'
         case 5:
-          return 'https://user-images.githubusercontent.com/21119252/41973233-91527996-7a3e-11e8-9b1c-34e2b8ee0118.png'
+          return 'http://join.futureleadersummit.org/images/rooms/Technopreneur.png'
         case 6:
-          return 'https://user-images.githubusercontent.com/21119252/41973340-e2cc96bc-7a3e-11e8-8a25-a079c0b6e279.png'
+          return 'http://join.futureleadersummit.org/images/rooms/UrbanPlanning.png'
         default:
           return 'https://user-images.githubusercontent.com/21119252/41821836-c2787e10-7810-11e8-8d2a-cc829bea4ae3.png'
       }

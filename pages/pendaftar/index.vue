@@ -37,7 +37,7 @@
           color="transparent"
           slider-color="white">
           <v-tab
-            v-for="menu in ['Belum dinilai', 'Waiting List', 'Diterima', 'Semua']"
+            v-for="menu in ['Belum dinilai', 'Sudah Dinilai', 'Waiting List', 'Diterima', 'Semua']"
             :key="menu">
             {{ menu }}
           </v-tab>
@@ -91,9 +91,12 @@
             <v-card-text>
               <template v-if="props.item.userId">
                 <v-chip v-if="props.item.status == 1" label color="info" outline>
-                  <span class="mr-1">status: </span> <strong> Waiting List</strong>
+                  <span class="mr-1">status: </span> <strong> Sudah Dinilai</strong>
                 </v-chip>
                 <v-chip v-if="props.item.status == 2" label color="info" outline>
+                  <span class="mr-1">status: </span> <strong> Waiting List</strong>
+                </v-chip>
+                <v-chip v-if="props.item.status == 3" label color="info" outline>
                   <span class="mr-1">status: </span> <strong> Diterima Delegates</strong>
                 </v-chip>
                 <v-chip label color="info" outline>
@@ -104,15 +107,15 @@
                   Edit Nilai
                 </v-btn>
                 <br>
-                <v-btn v-if="props.item.status != 1"  round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
+                <v-btn v-if="props.item.status == 3 || props.item.status == 1"  round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
                   <v-icon left="">add_to_queue</v-icon>
                   Masukkan Waiting List
                 </v-btn>
-                <v-btn v-if="props.item.status != 2"  round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
+                <v-btn v-if="props.item.status == 1 || props.item.status == 2"  round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
                   <v-icon left="">check</v-icon>
                   Terima Jadi Delegates
                 </v-btn>
-                <v-btn v-if="props.item.status == 1 || props.item.status == 2"  round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
+                <v-btn v-if="props.item.status == 3"  round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
                   <v-icon left="">close</v-icon>
                   Keluarkan
                 </v-btn>
@@ -152,12 +155,12 @@ export default {
       ],
       roomLists: [
         { text: 'All Room', value: '' },
-        { text: 'Human Capital', value: 'Human Capital' },
-        { text: 'Education', value: 'Education' },
-        { text: 'Digital', value: 'Digital' },
-        { text: 'Urban Planning', value: 'Urban Planning' },
-        { text: 'Entrepreneurship', value: 'Entrepreneurship' },
-        { text: 'Poverty', value: 'Poverty' },
+        { text: 'Digital', value: 1 },
+        { text: 'Education', value: 2 },
+        { text: 'Environment', value: 3 },
+        { text: 'International Relation', value: 4 },
+        { text: 'Technopreneur', value: 5 },
+        { text: 'Urban Planning', value: 6 },
       ],
       pagination: {},
       registrarItems: [],
@@ -254,19 +257,22 @@ export default {
           filter: 1,
           limit: this.pagination.rowsPerPage,
           page: this.pagination.page,
+          room: this.filterRoom,
           status: status,
           score: 1
         }          
-      } else if (this.tabs === 2) {
+      } else if (this.tabs === 1 || this.tabs === 2 || this.tabs === 3) {
         filterWhere = {
           filter: 1,
           limit: this.pagination.rowsPerPage,
+          room: this.filterRoom,
           page: this.pagination.page,
           status: status,          
         }
       } else {
         filterWhere = {
           limit: this.pagination.rowsPerPage,
+          room: this.filterRoom,
           page: this.pagination.page
         }        
       }
@@ -332,19 +338,20 @@ export default {
       let result = confirm('Kirim ulang email ' + data.email + '?');
       if (!result) return
       this.loadingSend = true
-      this.$axios.post('http://pinguin.dinus.ac.id:3000/send/fls-registration', {
-        secret: 'h3s0y4m',
-        email: data.email,
-        fullName: data.fullName,
-        roomFirst: data.roomFirst,
-        nickname: data.nickname,
-      }).then(response => {
-        this.notify({ type: 'success', message: 'berhasil kirim email ' + data.email })
-        this.loadingSend = false
-      }).catch(error => {
-        this.notify({ type: 'error', message: error.message })
-        this.loadingSend = false
-      })
+          this.$axios.post('https://api.futureleadersummit.org/delegates/send', {
+            email: data.email,
+            phone: data.phone,
+            send: true
+          }).then((response) => {
+            const result = response.data
+            // this.clearDelegate()
+            // console.log(result)
+            this.notify({ type: 'success', message: 'berhasil kirim email ' + data.email })
+            this.loadingSend = false
+          }).catch((error) => {
+            this.notify({ type: 'error', message: error.message })
+            this.loadingSend = false
+          })
     },
     async exportCsv () {
       console.log('proses export...');
@@ -361,7 +368,7 @@ export default {
       this.loadingBtnWaiting = true
 
       let registrar = {...data}
-      registrar.status = 1
+      registrar.status = 2
       delete registrar['id']
 
       this.$axios({
@@ -369,7 +376,7 @@ export default {
         url: '/delegates/' + data.id,
         data: registrar
       }).then(response => {
-        this.notify({ type: 'success', message: response.data.fullName + ' ditambahkan ke waiting list' })
+        this.notify({ type: 'success', message: response.data.data.fullName + ' ditambahkan ke waiting list' })
         this.fetchDataRegistrars()
         this.loadingBtnWaiting = false
       }).catch(error => {
@@ -381,8 +388,8 @@ export default {
       this.loadingBtnDelegates = true
 
       let registrar = {...data}
-      registrar.status = 2
-      delete registrar['id']
+      registrar.status = 3
+      // delete registrar['id']
 
       this.$axios({
         method: 'PUT',

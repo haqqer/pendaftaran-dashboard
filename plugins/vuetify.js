@@ -12,6 +12,7 @@ Vue.use(Vuetify, {
     warning: '#f1c40f',
     cloud: '#ecf0f1',
     silver: '#bdc3c7',
-    pink: '#ff4281'
+    pink: '#ff4281',
+    primary_dark: '#212121'
   }
 })

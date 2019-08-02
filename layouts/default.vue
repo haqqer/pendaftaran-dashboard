@@ -13,7 +13,7 @@
               <img src="~/static/images/fls-logo-mini.png" >
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>FLS 2018</v-list-tile-title>
+              <v-list-tile-title>FLS 2019</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -98,11 +98,11 @@ export default {
       userItems: [
         { icon: 'show_chart', title: 'Dashboard', to: '/' },
         { icon: 'table_chart', title: 'Data Pendaftar', to: '/pendaftar' },
-        // { icon: 'comment', title: 'Umpan Balik', to: '/umpan-balik' },
-        // { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+        { icon: 'comment', title: 'Umpan Balik', to: '/umpan-balik' },
+        { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
       ],
       adminItems: [
-        // { icon: 'mail', title: 'Pengiriman email', to: '/email-schedule' },
+        { icon: 'mail', title: 'Pengiriman email', to: '/email-schedule' },
         { icon: 'person', title: 'User', to: '/users' }
       ],
       miniVariant: false,

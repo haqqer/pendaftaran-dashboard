@@ -1,6 +1,6 @@
 <template>
-  <v-layout justify-center>
-    <v-flex>
+  <v-layout row wrap>
+    <v-flex v-for="(item, index) in feedbacks" :key="index" md4 xs12>
       <v-progress-circular
         v-if="loading"
         :size="70"
@@ -8,7 +8,7 @@
         indeterminate
         style=""
         color="primary"></v-progress-circular>
-      <v-card v-for="(item, index) in feedbacks" :key="index" class="mb-2">
+      <v-card class="ma-2">
         <v-card-title class="pb-0">
           <v-avatar
             tile
@@ -50,14 +50,8 @@ export default {
     ...mapActions(['notify']),
     fetchFeedback () {
       this.loading = true
-      this.$axios.$get('http://128.199.72.101:3001/api/Messages', {
-        params: {
-          filter: {
-            where: { topic: 'pendaftaran 2018' }
-          }
-        }
-      }).then(response => {
-        this.feedbacks = response
+      this.$axios.$get('/messages').then(response => {
+        this.feedbacks = response.data
         this.loading = false
       }).catch(error => {
         this.notify({ type: 'error', message: '' });
