@@ -18,6 +18,7 @@
     "@fortawesome/fontawesome-free-brands": "^5.0.13",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@nuxtjs/axios": "^5.0.0",
+    "@nuxtjs/pwa": "^2.4.0",
     "babel-polyfill": "^6.26.0",
     "chart.js": "^2.7.2",
     "chartjs-plugin-datalabels": "^0.3.0",
