@@ -29,7 +29,7 @@
         <v-btn v-if="registrar.Socmed.line" small icon color="success" :href="'http://line.me/ti/p/~' + registrar.Socmed.line" target="_blank">
           <v-icon>fab fa-line</v-icon>
         </v-btn>
-        <v-btn v-if="registrar.phone" small icon color="success" :href="'https://api.whatsapp.com/send?phone=' + registrar.phone" target="_blank">
+        <v-btn v-if="registrar.phone" small icon color="success" :href="'https://api.whatsapp.com/send?phone=+62' +registrar.phone.substring(1)" target="_blank">
           <v-icon>fab fa-whatsapp</v-icon>
         </v-btn>
       </div>
