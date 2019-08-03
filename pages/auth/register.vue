@@ -18,7 +18,7 @@
               </v-card-title>
             <v-card-text v-if="registerSuccess">
               <div class="body-2">
-                Akun <strong>{{ username }}</strong> berhasil dibuat. Silakan hubungi admin agar bisa dipakai login
+                Akun <strong>{{ name }}</strong> berhasil dibuat. Silakan hubungi admin agar bisa dipakai login
                 <v-btn block outline round color="primary" class="mt-4" to="/auth/login">ke halaman Login</v-btn>
               </div>
             </v-card-text>
@@ -28,13 +28,13 @@
                   <v-layout row wrap>
                     <v-flex xs12>
                       <v-text-field
-                        name="username"
-                        label="Username"
-                        id="username"
-                        v-model="username"
-                        data-vv-name="username"
-                        :error-messages="errors.collect('username')"
-                        v-validate="'required|alpha_num'"
+                        name="name"
+                        label="name"
+                        id="name"
+                        v-model="name"
+                        data-vv-name="name"
+                        :error-messages="errors.collect('name')"
+                        v-validate="'required'"
                         required></v-text-field>
                     </v-flex>
                   </v-layout>
@@ -91,7 +91,7 @@ export default {
   data() {
     return {
       email: '',
-      username: '',
+      name: '',
       password: '',
       loading: false,
       registerSuccess: false,
@@ -117,10 +117,14 @@ export default {
       this.$axios({
         method: 'post',
         url: '/users',
+        params: {
+          key: 'orausahiko2'
+        },
         data: {
-          username: this.username,
+          name: this.name,
           email: this.email,
-          password: this.password
+          password: this.password,
+          roleId: 'ranger'
         }
       }).then(response => {
         console.log('login ', response.data)
