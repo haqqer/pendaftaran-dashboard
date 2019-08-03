@@ -159,7 +159,7 @@ export default {
           }  
         })
       }).then(user => {
-        this.notify({ type: 'success', message: 'Berhasil essayMotivationJoin  ' + registrar.fullName })
+        this.notify({ type: 'success', message: 'Input Nilai Essay' + registrar.fullName + 'Berhasil' })
         this.$router.push('/pendaftar')
         // this.getDataRegistrar()
         this.loading = false

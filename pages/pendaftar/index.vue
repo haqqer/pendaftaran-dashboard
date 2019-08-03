@@ -43,6 +43,7 @@
           </v-tab>
         </v-tabs>
       </v-toolbar>
+
       <v-data-table
         :items="registrarItems"
         class="elevation-1"
@@ -51,7 +52,7 @@
         :total-items="totalRegistrar"
         :rows-per-page-items="[5, 10, 25, 50, 10000]"
         :pagination.sync="pagination">
-        <v-progress-linear slot="progress" color="info" indeterminate></v-progress-linear>
+        <v-progress-linear slot="progress" color="info" indeterminate></v-progress-linear>        
         <template slot="items" slot-scope="props">
           <!-- <td></td> -->
           <tr @click="props.expanded = !props.expanded" class="cursor-pointer">
@@ -107,11 +108,11 @@
                   Edit Nilai
                 </v-btn>
                 <br>
-                <v-btn v-if="props.item.status == 3 || props.item.status == 1"  round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
+                <v-btn v-if="(props.item.status == 1 || props.item.status == 3  ) && props.item.Score.total"  round color="success" @click="addToWaitingList(props.item)" :loading="loadingBtnWaiting">
                   <v-icon left="">add_to_queue</v-icon>
                   Masukkan Waiting List
                 </v-btn>
-                <v-btn v-if="props.item.status == 1 || props.item.status == 2"  round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
+                <v-btn v-if="(props.item.status == 1 || props.item.status == 2) && props.item.Score.total"  round color="success" @click="addToDelegates(props.item)" :loading="loadingBtnDelegates">
                   <v-icon left="">check</v-icon>
                   Terima Jadi Delegates
                 </v-btn>
@@ -171,7 +172,7 @@ export default {
       loadingBtnRemoveList: false,
       loadingSend: false,
       scored: false,
-      tabs: 0
+      tabs: 0,
     }
   },
   computed: {
@@ -180,7 +181,14 @@ export default {
       set (val) { this.$store.dispatch('setRoomSelected', val) }
     },
     itemExports () {
+      console.log('[registrar Items]', this.registrarItems)
       return this.registrarItems.map(element => {
+        if(!element.User) {
+          element.user = 'none'
+        } else {
+          element.user = element.User.name
+        }
+        console.log('[element user] '+element.user);
         return {
           status: this.getstatus(element.status),
           room: element.roomFirst,
@@ -192,19 +200,23 @@ export default {
           kota: element.city,
           provinsi: element.province,
           universitas: element.institution,
-          instagram: element.socmed.instagram,
-          line: element.socmed.line,
+          facebook: element.Socmed.facebook,
+          instagram: element.Socmed.instagram,
+          line: element.Socmed.line,
           hp: element.phone,
-          'skor prestasi': element.scoreAuto.achievement,
-          'skor organisasi': element.scoreAuto.organization,
-          'skor sosial': element.scoreAuto.socialActivity,
-          'skor essay': element.scoreEssay,
-          'skor total': element.scoreTotal,
-          'dinilai oleh': element.userId.name
+          'skor prestasi': element.Score.achievement,
+          'skor organisasi': element.Score.organization,
+          'skor sosial': element.Score.socialActivity,
+          'skor essay Motivation Join': element.Score.essayMotivationJoin,
+          'skor essay Motivation Join': element.Score.essayRoomSelected,
+          'skor essay Motivation Join': element.Score.essayCaseStudy,
+          'skor total': element.Score.total,
+          'dinilai oleh': element.user
         }
       })
     },
     search () {
+      console.log('[search] '+this.$store.state.searchField)
       return this.$store.state.searchField
     },
     pages () {
@@ -258,6 +270,7 @@ export default {
           limit: this.pagination.rowsPerPage,
           page: this.pagination.page,
           room: this.filterRoom,
+          search: this.search || '',
           status: status,
           score: 1
         }          
@@ -267,28 +280,20 @@ export default {
           limit: this.pagination.rowsPerPage,
           room: this.filterRoom,
           page: this.pagination.page,
-          status: status,          
+          status: status,
+          search: this.search || '',
         }
       } else {
         filterWhere = {
+          filter: 1,
           limit: this.pagination.rowsPerPage,
           room: this.filterRoom,
-          page: this.pagination.page
+          page: this.pagination.page,
+          search: this.search || '',
         }        
       }
       console.log(this.tabs)
-      // let filterWhere = {
-      //   and: [
-      //     scoreEssay,
-      //     status,
-      //     { roomFirst: { like: this.filterRoom } },
-      //     { or: [
-      //       { fullName: { like: (this.search || '') + '.*', options: 'i' } },
-      //       { email: { like: (this.search || '') + '.*', options: 'i' } }
-      //     ]}
-      //   ]
-      // }
-
+      this.getTotalRegistrars()
       this.$axios.$get('/delegates', {
         params: filterWhere
       }).then(response => {
@@ -325,9 +330,21 @@ export default {
     },
     getTotalRegistrars (filter) {
       this.loadingRegistrar = true
-      this.$axios.$get('/delegates/count').then(response => {
+      let filters;
+      if(this.filterRoom) {
+        console.log('filterroom')
+          filters = {
+            room: this.filterRoom
+          }
+      } else {
+          filters = {
+          }        
+      }
+      this.$axios.$get('/delegates/count', {
+        params: filters
+      }).then(response => {
         this.totalRegistrar = response.data.count
-        console.log('[total register] '+response.data)
+        console.log('[total register] '+response.data.count)
         this.loadingRegistrar = false
       }).catch(error => {
         this.loadingRegistrar = false
@@ -356,7 +373,7 @@ export default {
     async exportCsv () {
       console.log('proses export...');
       let result = await Papa.unparse(this.itemExports, { download: true })
-      let uriContent = "data:text/csv;charset=utf-8," + encodeURIComponent(result);
+    let uriContent = "data:text/csv;charset=utf-8," + encodeURIComponent(result);
       let link = document.createElement("a");
       link.setAttribute("href", uriContent);
       let filename = '' + this.filterRoom + ' ' + this.getstatus(this.tabs) + '.csv'
@@ -376,7 +393,7 @@ export default {
         url: '/delegates/' + data.id,
         data: registrar
       }).then(response => {
-        this.notify({ type: 'success', message: response.data.data.fullName + ' ditambahkan ke waiting list' })
+        this.notify({ type: 'success', message: registrar.fullName + ' ditambahkan ke waiting list' })
         this.fetchDataRegistrars()
         this.loadingBtnWaiting = false
       }).catch(error => {
@@ -396,7 +413,7 @@ export default {
         url: '/delegates/' + data.id,
         data: registrar
       }).then(response => {
-        this.notify({ type: 'success', message: response.data.data.fullName + ' diterima jadi Delegates' })
+        this.notify({ type: 'success', message: registrar.fullName + ' diterima jadi Delegates' })
         this.fetchDataRegistrars()
         this.loadingBtnDelegates = false
       }).catch(error => {
@@ -408,14 +425,15 @@ export default {
       this.loadingBtnRemoveList = true
 
       let registrar = {...data}
-      registrar.status = 0
-      delete registrar['id']
+      registrar.status = 1
+      // delete registrar['id']
 
       this.$axios({
         method: 'PUT',
-        url: '/Registrars/' + data.id,
+        url: '/delegates/' + data.id,
         data: registrar
       }).then(response => {
+        console.log(response.data);
         this.notify({ type: 'success', message: response.data.fullName + ' dikeluarkan dari list' })
         this.fetchDataRegistrars()
         this.loadingBtnRemoveList = false
