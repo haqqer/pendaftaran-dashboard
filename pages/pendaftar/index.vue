@@ -116,7 +116,7 @@
                   <v-icon left="">check</v-icon>
                   Terima Jadi Delegates
                 </v-btn>
-                <v-btn v-if="props.item.status == 3"  round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
+                <v-btn v-if="props.item.status == 3 || props.item.status == 2"  round color="error" @click="removeFromList(props.item)" :loading="loadingBtnRemoveList">
                   <v-icon left="">close</v-icon>
                   Keluarkan
                 </v-btn>

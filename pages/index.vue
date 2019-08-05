@@ -23,7 +23,7 @@
         </v-flex>
     </v-layout>
     <v-layout class="mt-4 mb-5">
-      <v-flex md12 xs12>
+      <v-flex xs12>
         <v-card>
           <v-card-title>
             <p class="subheading">Pendaftar Total : <strong>{{ totalRegistrar }}</strong></p>
@@ -33,8 +33,8 @@
         </v-card>
       </v-flex>      
     </v-layout>
-    <v-layout class="mt-4">
-      <v-flex md6 xs12>
+    <v-layout class="mt-4" wrap row>
+      <v-flex xs12 md6> 
         <v-card>
           <v-card-title>
           </v-card-title>
@@ -43,7 +43,7 @@
           </v-card-text>
         </v-card>
       </v-flex>
-      <v-flex md6 xs12>
+      <v-flex xs12 md6 class="mt-5">
         <v-card>
           <v-card-title>
             <p class="subheading">Pendaftar Total : <strong>{{ totalRegistrar }}</strong></p>
