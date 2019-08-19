@@ -12,11 +12,12 @@
       <v-flex md3 class="mx-2">
           <v-card color="grey">
             <v-card-title>
-              <v-icon x-large>assignment</v-icon>
-              <h1 class="display-1 ml-4">{{ registrarSelected }} / {{ totalRegistrar }}</h1>
+              <p>Total pendaftar</p>
+              
+              <h1 class="display-1 ml-4"><v-icon x-large>assignment</v-icon> {{ registrarSelected }} / {{ totalRegistrar }}</h1>
             </v-card-title>
             <v-card-text>
-              <p>Pendaftar yang belum</p>
+              <!-- <p>Pendaftar yang belum</p> -->
               <v-progress-linear v-model="percentScoredRegistrar"></v-progress-linear>
             </v-card-text>
           </v-card>
@@ -37,18 +38,17 @@
       <v-flex xs12 md6> 
         <v-card>
           <v-card-title>
+            <v-spacer></v-spacer>
           </v-card-title>
           <v-card-text>
             <pie-chart :data="chartStatus" :download="true" :library="{plugins: { datalabels: {color: '#ffff'}}}"></pie-chart>
           </v-card-text>
         </v-card>
       </v-flex>
-      <v-flex xs12 md6 class="mt-5">
+      <v-flex xs12 md6>
         <v-card>
           <v-card-title>
-            <p class="subheading">Pendaftar Total : <strong>{{ totalRegistrar }}</strong></p>
             <v-spacer></v-spacer>
-            <p>{{ new Date() | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}</p>
           </v-card-title>
           <v-card-text>
             <pie-chart :data="chartRoom" :download="true" :library="{plugins: { datalabels: {color: '#ffff'}}}"></pie-chart>
@@ -56,7 +56,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <p>hello</p>
   </div>
 </template>
 

@@ -230,6 +230,8 @@ export default {
       return (this.pagination.page - 1) * this.pagination.rowsPerPage
     },
     orderBy () {
+      console.log('orderBy')
+      console.log(this.pagination)
       if (!this.pagination.sortBy) return ''
       return this.pagination.sortBy + (this.pagination.descending ? ' DESC' : ' ASC')
     }
@@ -263,7 +265,8 @@ export default {
       let status = this.tabs
       // console.log('score total', this.registrarItems.Score);
       console.log('status : ',status);
-      let filterWhere;
+      let filterWhere
+
       if(this.tabs === 0) {
         filterWhere = {
           filter: 1,
@@ -272,7 +275,9 @@ export default {
           room: this.filterRoom,
           search: this.search || '',
           status: status,
-          score: 1
+          score: 1,
+          sortby: this.pagination.sortBy,
+          desc: this.pagination.descending
         }          
       } else if (this.tabs === 1 || this.tabs === 2 || this.tabs === 3) {
         filterWhere = {
@@ -282,6 +287,8 @@ export default {
           page: this.pagination.page,
           status: status,
           search: this.search || '',
+          sortBy: this.pagination.sortBy,
+          desc: this.pagination.descending                 
         }
       } else {
         filterWhere = {
@@ -290,6 +297,8 @@ export default {
           room: this.filterRoom,
           page: this.pagination.page,
           search: this.search || '',
+          sortBy: this.pagination.sortBy,
+          desc: this.pagination.descending                  
         }        
       }
       console.log(this.tabs)
@@ -329,6 +338,7 @@ export default {
       })
     },
     getTotalRegistrars (filter) {
+      console.log(this.pagination)
       this.loadingRegistrar = true
       let filters;
       if(this.filterRoom) {
@@ -485,9 +495,10 @@ export default {
     }
   },
   mounted () {
+    console.log(this.pagination);
     // this.fetchDataRegistrars()
-    this.pagination.sortBy = 'scoreTotal'
-    this.pagination.descending = true
+    // this.pagination.sortBy = 'scoreTotal'
+    // this.pagination.descending = true
     this.getTotalRegistrars()
   }
 }

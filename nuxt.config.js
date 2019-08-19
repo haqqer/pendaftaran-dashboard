@@ -43,7 +43,7 @@ module.exports = {
     '@/plugins/vue-moment',
     '@/plugins/vuetify',
     '@/plugins/axios',
-    '@/plugins/init-app'
+    '@/plugins/init-app',
   ],
 
   /*
