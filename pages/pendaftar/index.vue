@@ -287,17 +287,18 @@ export default {
           page: this.pagination.page,
           status: status,
           search: this.search || '',
-          sortBy: this.pagination.sortBy,
+          sortby: this.pagination.sortBy,
           desc: this.pagination.descending                 
         }
       } else {
+        console.log('filter all');
         filterWhere = {
           filter: 1,
           limit: this.pagination.rowsPerPage,
           room: this.filterRoom,
           page: this.pagination.page,
           search: this.search || '',
-          sortBy: this.pagination.sortBy,
+          sortby: this.pagination.sortBy,
           desc: this.pagination.descending                  
         }        
       }
@@ -453,7 +454,7 @@ export default {
       })
     },
     iconGender (gender) {
-      console.log('gender : ',gender)
+      // console.log('gender : ',gender)
       switch (gender) {
         case false:
           return 'fas fa-mars'
