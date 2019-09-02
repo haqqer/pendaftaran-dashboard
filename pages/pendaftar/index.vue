@@ -342,10 +342,11 @@ export default {
       console.log(this.pagination)
       this.loadingRegistrar = true
       let filters;
-      if(this.filterRoom) {
+      if(this.filterRoom && this.tabs) {
         console.log('filterroom')
           filters = {
-            room: this.filterRoom
+            room: this.filterRoom,
+            status: this.tabs
           }
       } else {
           filters = {
