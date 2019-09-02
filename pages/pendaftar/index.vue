@@ -338,19 +338,23 @@ export default {
         console.log(error.config);
       })
     },
-    getTotalRegistrars (filter) {
+    getTotalRegistrars () {
       console.log(this.pagination)
       this.loadingRegistrar = true
       let filters;
-      if(this.filterRoom && this.tabs) {
-        console.log('filterroom')
+      console.log('tabs : ', this.tabs);
+      if(this.filterRoom) {
           filters = {
             room: this.filterRoom,
-            status: this.tabs
           }
       } else {
           filters = {
           }        
+      }
+      if(this.tabs !== 4) {
+        filters = {
+          status: this.tabs,
+        }        
       }
       this.$axios.$get('/delegates/count', {
         params: filters
